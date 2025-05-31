@@ -10,33 +10,18 @@ tagline: 记录生活，分享技术，记录成长，一个热爱代码的追�
 projects:
   - icon: folder-open
     name: HungerYet
-    desc: 项目详细描述
-    link: https://你的项目链接
+    desc: 高级程序设计课程设计
+    link: https://github.com/KBchulan/HungerYet
+
+  - icon: folder-open
+    name: LightNovel
+    desc: 轻小说阅读App
+    link: https://github.com/KBchulan/lightNovel
 
   - icon: link
-    name: 链接名称
-    desc: 链接详细描述
-    link: https://链接地址
+    name: 服务导航
+    desc: 我的云服务器的服务导航
+    link: http://39.105.13.0:50000/index.html
 
-  - icon: book
-    name: 书籍名称
-    desc: 书籍详细描述
-    link: https://你的书籍链接
-
-  - icon: newspaper
-    name: 文章名称
-    desc: 文章详细描述
-    link: https://你的文章链接
-
-  - icon: user-group
-    name: 伙伴名称
-    desc: 伙伴详细介绍
-    link: https://你的伙伴链接
-
-  - icon: https://theme-hope-assets.vuejs.press/logo.svg
-    name: 自定义项目
-    desc: 自定义详细介绍
-    link: https://你的自定义链接
-
-footer: 自定义你的页脚文字
+footer: 随心记录，记录一下自己的成长
 ---
