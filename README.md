@@ -1,2 +1,3 @@
 # ClBlogs
-KBchulan's personal blogs
+
+KBchulan's personal blogs(Development officially started during the summer vacation)
