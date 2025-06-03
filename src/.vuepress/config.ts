@@ -6,8 +6,8 @@ export default defineUserConfig({
   base: "/ClBlogs/",
 
   lang: "zh-CN",
-  title: "Chulan's Blog",
-  description: "Chulan's Blog",
+  title: "KBchulan的博客",
+  description: "KBchulan的博客",
 
   theme,
 
