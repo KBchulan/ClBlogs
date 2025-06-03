@@ -45,4 +45,3 @@ jobs:
           # 部署文档
           branch: blog-pages
           folder: src/.vuepress/dist
-          clean: true
