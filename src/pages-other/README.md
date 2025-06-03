@@ -1,7 +1,9 @@
 ---
 title: 随笔
 icon: pen-to-square
+article: false
 index: false
+
 footer: Always coding, always learning
 ---
 # 随笔

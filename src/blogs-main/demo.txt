@@ -1,0 +1,33 @@
+---
+title: VuePress Hope 配置示例
+icon: placeholder
+# 不设置为文章类型，这样就不会在博客中显示
+article: false
+index: false
+
+# 注释掉星标设置
+star: true
+
+# 分类（可以设置多个）
+category:
+  - 示例
+  - 配置参考
+
+# 标签（可以设置多个）
+tag:
+  - 示例
+  - 配置
+
+date: 2024-01-01
+
+# 是否置顶
+# sticky: true
+
+# 文章摘要
+description: 这是一个配置参考示例，不会在博客文章列表中显示
+
+# 封面图片
+cover: /assets/imgs/cover.jpg
+
+footer: Always coding, always learning
+---

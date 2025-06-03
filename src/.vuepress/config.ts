@@ -9,6 +9,10 @@ export default defineUserConfig({
   title: "KBchulan的博客",
   description: "KBchulan的博客",
 
+  head: [
+    ["link", { rel: "icon", href: "/ClBlogs/favicon.png" }]
+  ],
+
   theme,
 
   // 和 PWA 一起启用

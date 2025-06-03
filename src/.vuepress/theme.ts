@@ -11,8 +11,6 @@ export default hopeTheme({
     url: "https://kbchulan.github.io/ClBlogs/",
   },
 
-  logo: "http://39.105.13.0:50000/imgs/Clblogs.ico",
-
   repo: "KBchulan/ClBlogs",
 
   docsDir: "src",
@@ -29,7 +27,8 @@ export default hopeTheme({
 
   // 博客相关
   blog: {
-    description: "啥都想学，啥都不会的普通人",
+    avatar: "/assets/imgs/head.png",
+    description: "啥都想学，啥都不会的程序猿",
     intro: "/intro.html",
     medias: {
       GitHub: "https://github.com/KBchulan",

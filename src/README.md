@@ -5,16 +5,15 @@ icon: house
 title: 首页
 heroText: 欢迎来到KBchulan的博客
 heroFullScreen: true
-bgImage: /assets/images/bg.png
-bgImageDark: /assets/images/bg.png
+bgImage: /assets/imgs/bg.png
 bgImageStyle:
   background-size: cover
   background-position: center
   background-repeat: no-repeat
   background-attachment: scroll
-  opacity: 0.3
-  background-blend-mode: overlay
+  opacity: 0.25
 tagline: 愿我们都是在做自己想做的事
+
 projects:
   - icon: folder-open
     name: HungerYet
