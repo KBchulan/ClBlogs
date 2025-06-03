@@ -94,7 +94,23 @@ export default hopeTheme({
 
   // 在这里配置主题提供的插件
   plugins: {
-    blog: true,
+    blog: {
+      filter: (page) => {
+        if (page.filePathRelative?.endsWith('README.md')) {
+          return false;
+        }
+
+        if (page.frontmatter.article === false) {
+          return false;
+        }
+
+        if (page.frontmatter.index === false) {
+          return false;
+        }
+
+        return true;
+      },
+    },
 
     components: {
       components: ["Badge", "VPCard"],
