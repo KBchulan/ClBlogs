@@ -21,7 +21,7 @@ footer: Always coding, always learning
 
 # Rust 学习之旅
 
-> 本章记录作者学习 Rust 圣经的笔记与心得体会，旨在为 Rust 学习者提供实用的参考指南。
+> 本章记录作者学习 Rust 圣经的笔记与心得体会，方便以后复习。
 
 ## 安装 Rust
 
@@ -37,7 +37,7 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 sudo apt install build-essential
 ```
 
-> 💡 运行上述命令即可自动安装最新稳定版本的 Rust
+> 运行上述命令即可自动安装最新稳定版本的 Rust
 
 ### Windows 系统
 
@@ -74,4 +74,4 @@ sudo apt install build-essential
 
 ---
 
-**下一步：** 从Hello World开始，认识一下Rust的大体框架
+**下一步：** 从Hello World开始，简单认识一下Rust的大体框架
