@@ -1,5 +1,7 @@
 ---
+# 标题
 title: VuePress Hope 配置示例
+# 图标
 icon: placeholder
 # 不设置为文章类型，这样就不会在博客中显示
 article: false

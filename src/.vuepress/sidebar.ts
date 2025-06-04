@@ -60,5 +60,12 @@ export default sidebar({
   // pages-other 目录的独立侧边栏
   "/pages-other/": [
     "",
+    {
+      text: "一周一次",
+      icon: "placeholder",
+      prefix: "WeekOnce/",
+      collapsible: true,
+      children: "structure",
+    },
   ],
 });

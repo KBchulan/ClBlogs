@@ -42,10 +42,10 @@ export default hopeTheme({
   // 加密配置
   encrypt: {
     config: {
-      // "/demo/encrypt.html": {
-      //   hint: "Password: 1234",
-      //   password: "1234",
-      // },
+      "/pages-other/WeekOnce/": {
+        hint: "为什么要输入密码，来看的应该都懂：",
+        password: "episode-132",
+      },
     },
   },
 
