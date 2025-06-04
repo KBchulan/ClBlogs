@@ -92,6 +92,8 @@ export default hopeTheme({
     vPre: true,
   },
 
+  sidebarSorter: ["order", "title"],
+
   // 在这里配置主题提供的插件
   plugins: {
     blog: {
@@ -110,6 +112,7 @@ export default hopeTheme({
 
         return true;
       },
+      // excerptLength: 200,  // 设置摘要长度
     },
 
     components: {

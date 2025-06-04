@@ -12,8 +12,9 @@ footer: Always coding, always learning
 
 ## 分类目录
 
-- **asio** - 异步IO编程
-- **concurrent** - 并发编程
 - **modern-cpp** - 现代C++
 - **typescript** - TypeScript开发
+- **rust** - Rust语言学习
+- **asio** - 异步IO编程
+- **concurrent** - 并发编程
 - **vue3** - Vue3框架学习

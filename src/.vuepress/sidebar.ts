@@ -23,6 +23,13 @@ export default sidebar({
       children: "structure",
     },
     {
+      text: "rust",
+      icon: "placeholder",
+      prefix: "rust/",
+      collapsible: true,
+      children: "structure",
+    },
+    {
       text: "asio",
       icon: "placeholder",
       prefix: "asio/",
@@ -45,13 +52,13 @@ export default sidebar({
     },
   ],
 
-  // pages-other 目录的独立侧边栏
-  "/pages-other/": [
+  // program-main 目录的独立侧边栏
+  "/program-main/": [
     "",
   ],
 
-  // program-main 目录的独立侧边栏
-  "/program-main/": [
+  // pages-other 目录的独立侧边栏
+  "/pages-other/": [
     "",
   ],
 });
