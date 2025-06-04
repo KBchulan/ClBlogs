@@ -25,7 +25,7 @@ footer: Always coding, always learning
 
 ## 安装 Rust
 
-我们将使用 **rustup** 来安装 Rust。rustup 是 Rust 官方的工具链管理器，能够方便地安装、更新和卸载 Rust。
+我们将使用 `rustup` 来安装 Rust。`rustup` 是 Rust 官方的工具链管理器，能够方便地安装、更新和卸载 Rust。
 
 ### Linux 系统
 
@@ -48,7 +48,7 @@ sudo apt install build-essential
    从 Rust 官网下载 [rustup 安装程序](https://rustup.rs/)，运行安装即可
 
 3. **配置环境变量**
-   安装完成后，rustup 会自动配置环境变量，当然自己搞到环境变量也是一样的
+   安装完成后，`rustup` 会自动配置环境变量，当然自己搞到环境变量也是一样的
 
 ### 常用命令
 
@@ -68,10 +68,10 @@ sudo apt install build-essential
 | 工具类型 | 推荐选择 | 说明 |
 |----------|----------|------|
 | **编辑器** | [Visual Studio Code](https://code.visualstudio.com/) | 轻量级，插件丰富 |
-| **语言服务** | rust-analyzer | 提供智能补全、错误检查等 |
-| **配置文件** | Even Better TOML | 更好的 TOML 文件支持 |
-| **错误提示** | Error Lens | 行内显示错误和警告 |
+| **语言服务** | `rust-analyzer` | 提供智能补全、错误检查等 |
+| **配置文件** | `Even Better TOML` | 更好的 TOML 文件支持 |
+| **错误提示** | `Error Lens` | 行内显示错误和警告 |
 
 ---
 
-**下一步：** 从Hello World开始，简单认识一下Rust的大体框架
+**下一步：** 从 Hello World 开始，简单认识一下 `Rust` 的大体框架
