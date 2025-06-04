@@ -42,9 +42,25 @@ export default hopeTheme({
   // 加密配置
   encrypt: {
     config: {
-      "/pages-other/WeekOnce/": {
-        hint: "为什么要输入密码，来看的应该都懂：",
+      "/pages-other/WeekOnce/Episode 132": {
+        hint: "请输入密码：",
         password: "episode-132",
+      },
+      "/pages-other/WeekOnce/Episode 169": {
+        hint: "请输入密码：",
+        password: "episode-169",
+      },
+      "/pages-other/WeekOnce/Episode 229": {
+        hint: "请输入密码：",
+        password: "episode-229",
+      },
+      "/pages-other/WeekOnce/Episode 270": {
+        hint: "请输入密码：",
+        password: "episode-270",
+      },
+      "/pages-other/WeekOnce/Episode 320": {
+        hint: "请输入密码：",
+        password: "episode-320",
       },
     },
   },
@@ -92,7 +108,7 @@ export default hopeTheme({
     vPre: true,
   },
 
-  sidebarSorter: ["order", "title"],
+  sidebarSorter: ["order", "date", "title"],
 
   // 在这里配置主题提供的插件
   plugins: {
@@ -107,6 +123,11 @@ export default hopeTheme({
         }
 
         if (page.frontmatter.index === false) {
+          return false;
+        }
+
+        // 如果标题以 episode- 开头，则不显示
+        if (page.frontmatter.title?.startsWith("episode-")) {
           return false;
         }
 
