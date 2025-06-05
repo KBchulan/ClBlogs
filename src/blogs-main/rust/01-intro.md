@@ -1,5 +1,5 @@
 ---
-title: rust 学习之旅
+title: Begin
 icon: placeholder
 article: true
 order: 1

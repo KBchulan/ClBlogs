@@ -1,5 +1,5 @@
 ---
-title: 基础类型
+title: BasicType
 icon: placeholder
 article: true
 order: 2

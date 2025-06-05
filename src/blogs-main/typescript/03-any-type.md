@@ -1,5 +1,5 @@
 ---
-title: 任意类型
+title: AnyType
 icon: placeholder
 article: true
 order: 3
@@ -77,7 +77,7 @@ a = new Function()
 
 ## any 与 unknown 的区别
 
-### 1. 赋值限制
+### 赋值限制
 
 `unknown` 只能赋值给 `unknown` 和 `any` 类型：
 
@@ -92,7 +92,7 @@ if (typeof b === 'number') {
 }
 ```
 
-### 2. 属性访问限制
+### 属性访问限制
 
 `unknown` 无法直接读取任何属性，也无法调用任何方法：
 
