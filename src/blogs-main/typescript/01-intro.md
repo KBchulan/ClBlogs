@@ -1,5 +1,5 @@
 ---
-title: typescript 学习之旅
+title: ts 学习之旅
 icon: placeholder
 article: true
 order: 1

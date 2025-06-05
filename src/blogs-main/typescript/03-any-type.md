@@ -123,7 +123,7 @@ let unknownValue: unknown = 'hello'
 
 ## 常见类型概览
 
-以下是 TypeScript 中常见的类型分类，我们会在后续章节详细展开：
+以下是 TypeScript 中常见的类型，我们会在后续章节详细展开：
 
 ### 原始类型
 ```typescript
@@ -154,11 +154,10 @@ let func: Function = () => {}
 
 ## 小结
 
-理解 TypeScript 的类型层级是掌握类型系统的基础。记住下面核心概念：
+下面是本节的核心概念：
 
 1. **类型层级**：高等级类型可以包含低等级类型
-2. **any vs unknown**：`unknown` 更安全，需要类型检查后才能使用
-3. **类型安全**：优先使用更具体的类型，避免过度依赖顶级类型
+2. **类型安全**：优先使用更具体的类型，避免过度依赖顶级类型
+3. **any vs unknown**：`unknown` 更安全，需要类型检查后才能使用
 
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/03-any-type/index.ts)。
-
