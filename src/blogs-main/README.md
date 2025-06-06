@@ -15,6 +15,6 @@ footer: Always coding, always learning
 - **modern-cpp** - 现代C++
 - **typescript** - TypeScript开发
 - **rust** - Rust语言学习
-- **asio** - 异步IO编程
-- **concurrent** - 并发编程
+- **asio** - Boost的网络库
+- **concurrent** - C++并发编程
 - **vue3** - Vue3框架学习
