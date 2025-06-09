@@ -11,7 +11,7 @@ category:
 tag:
   - typescript
 
-date: 2025-06-06
+date: 2025-06-07
 
 description: never类型的相关介绍和应用场景
 footer: Always coding, always learning

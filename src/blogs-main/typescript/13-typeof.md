@@ -11,7 +11,7 @@ category:
 tag:
   - typescript
 
-date: 2025-06-06
+date: 2025-06-07
 
 description: 类型推论以及类型别名
 footer: Always coding, always learning

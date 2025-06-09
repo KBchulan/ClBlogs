@@ -11,7 +11,7 @@ category:
 tag:
   - typescript
 
-date: 2025-06-06
+date: 2025-06-07
 
 description: 元组相关介绍
 footer: Always coding, always learning
