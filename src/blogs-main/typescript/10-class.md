@@ -19,11 +19,11 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-## 类的相关内容
+## 基本类
 
 ### 基本用法、继承和类型约束
 
-类可以通过 `extends` 关键字实现继承，通过 `implements` 关键字实现接口约束：
+类可以通过 `extends` 关键字实现继承，通过 `implements` 关键字实现接口约束，注意extends需要写在implements前面：
 
 ```typescript
 // 基础类定义
@@ -44,7 +44,6 @@ interface Flyable {
   fly(): void
 }
 
-// 继承和接口实现，继承需要写在implements前面
 class Bird extends Animal implements Flyable {
   constructor(name: string) {
     super(name)
@@ -186,7 +185,7 @@ console.log(MathUtils.getCircleArea(5))      // 78.53975
 // const math = new MathUtils() // 通常不需要实例化工具类
 ```
 
-### getter 和 setter
+### get，set
 
 使用 `get` 和 `set` 关键字定义属性的访问器，提供对属性访问的控制，这个和c++不太一样，此处类似于一个拦截器的操作：
 
@@ -230,7 +229,7 @@ console.log(temp.celsius)    // 30
 
 ### 实际应用示例
 
-好了，你已经学完了类，该手搓vue了：
+好了，你已经学完了类，该手搓vue了(笑)，这里我们写一个简单的东西：
 
 ```typescript
 interface Options {

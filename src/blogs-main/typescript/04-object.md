@@ -23,22 +23,20 @@ footer: Always coding, always learning
 
 TypeScript 中有三种对象类型：`Object`、`object` 和 `{}`。
 
-## Object 类型
+## Object
 
 `Object` 是所有类型的顶级类型，在原型链中处于最顶层。几乎所有的值都可以赋值给 `Object` 类型：
 
 ```typescript
-let a1: Object = 123        // 基本类型 ✓
-let a2: Object = '123'      // 字符串 ✓
-let a3: Object = true       // 布尔值 ✓
-let a4: Object = Symbol()   // 符号 ✓
-let a5: Object = 100n       // BigInt ✓
-let a6: Object = {}         // 对象 ✓
-let a7: Object = []         // 数组 ✓
-let a8: Object = () => 213  // 函数 ✓
+let a1: Object = 123        // 基本类型
+let a2: Object = '123'      // 字符串
+let a3: Object = true       // 布尔值
+let a4: Object = Symbol()   // 符号
+let a5: Object = 100n       // BigInt
+let a6: Object = {}         // 对象
+let a7: Object = []         // 数组
+let a8: Object = () => 213  // 函数
 ```
-
-### Object 类型的限制
 
 虽然 `Object` 可以接受几乎所有类型的值，但它不能访问对象的具体属性：
 
@@ -52,37 +50,17 @@ let aaa: Object = {
 
 这是因为 `Object` 类型只保证值符合 `Object` 接口的基本要求，不包含具体的属性定义。
 
-## object 类型
+## object
 
-`object` 类型表示所有**非原始类型**，具体有什么可以看一看上一节最后的内容。
-
-### object 类型的限制
-
-原始类型不能赋值给 `object`：
+`object` 类型表示所有**非原始类型**，具体有什么可以看一看上一节最后的内容，原始类型不能赋值给object：
 
 ```typescript
-// 以下都会报错
-// let b1: object = 123;     // 错误：基本类型不能赋值给 object
-// let b2: object = '123';   // 错误：字符串不能赋值给 object
-// let b3: object = true;    // 错误：布尔值不能赋值给 object
+let b1: object = 123;     // 错误：基本类型不能赋值给 object
+let b2: object = '123';   // 错误：字符串不能赋值给 object
+let b3: object = true;    // 错误：布尔值不能赋值给 object
 ```
 
-### object 类型可以接受的值
-
-所有引用类型都可以赋值给 `object`：
-
-```typescript
-let b4: object = {}         // 对象 ✓
-let b5: object = []         // 数组 ✓
-let b6: object = () => 213  // 函数 ✓
-
-// 内置对象也可以
-let set: object = new Set([1, 2, 3])
-let map: object = new Map([["name", true]])
-let date: object = new Date()
-```
-
-## {} 类型
+## 空对象{}
 
 `{}` 表示对象字面量类型，它和 `Object` 类似，但有更多限制。它不可以访问原型链上的任何属性或方法。
 
@@ -94,11 +72,9 @@ let empty2: {} = {}      // 空对象
 
 ## 三者对比总结
 
-| 类型 | 可接受的值 | 特点 |
-|------|------------|------|
-| `Object` | 几乎所有值 | 最宽泛，但无法访问具体属性 |
-| `object` | 仅非原始类型 | 排除了基本类型 |
-| `{}` | 几乎所有值 | 类似 Object，但限制更多 |
+- **Object**：可接受几乎所有值，但无法访问具体属性
+- **object**：仅接受非原始类型，更安全
+- **{}**：空对象类型，类似 `Object`，但无法访问原型链上的属性
 
 ## 原型链介绍
 
@@ -173,7 +149,7 @@ Object.prototype.customMethod = function() {
 
 // 现在所有对象都可以访问这个方法
 const anyObject = {}
-// console.log(anyObject.customMethod()) // 但 TypeScript 会报错，因为类型定义中没有这个方法
+// console.log(anyObject.customMethod()) // 但 ts 会报错，因为类型定义中没有这个方法
 ```
 
 ## 小结

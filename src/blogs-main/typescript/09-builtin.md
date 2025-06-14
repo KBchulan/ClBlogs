@@ -24,8 +24,6 @@ footer: Always coding, always learning
 TypeScript 为所有 ECMAScript 标准对象提供了类型定义，这些类型通常对应于通过 `new` 操作符创建的对象：
 
 ```typescript
-// ECMAScript内置
-// 类型为对应new出来的类型
 let num: Number = new Number(1)
 let date: Date = new Date()
 let reg: RegExp = new RegExp(/.*?/)
@@ -38,17 +36,11 @@ console.log(reg.test('test')) // true
 console.log(error.message)    // 'error'
 ```
 
-需要注意的是，基本类型和包装对象类型是不同的：
+需要注意的是，基本类型和包装对象类型是不同的，通常我们使用基本类型：
 
 ```typescript
-// 基本类型 vs 包装对象类型
-let primitiveNum: number = 1        // 基本类型
+let primitiveNum: number = 1          // 基本类型
 let objectNum: Number = new Number(1) // 包装对象类型
-
-// 通常我们使用基本类型
-let str: string = 'hello'
-let bool: boolean = true
-let n: number = 42
 ```
 
 ## DOM 相关类型
@@ -56,9 +48,7 @@ let n: number = 42
 TypeScript 为所有 DOM 元素提供了详细的类型定义。元素类型通常遵循 `HTML[元素名称]Element` 的命名规则：
 
 ```typescript
-// DOM相关
 // 类型为HTML(元素名称)Element, 但是若是section这种无特殊标签的类型实际上会修正为HTMLElement
-// 下面有两个例子，一个是非空断言，一个是类型守卫
 let element1: HTMLDivElement = document.querySelector('div')!
 let element2 = document.querySelector('section')
 if (element2) {
@@ -67,7 +57,8 @@ if (element2) {
 
 // 查询多个元素
 let elements1: NodeList = document.querySelectorAll('div')
-let elements2: NodeListOf<HTMLDivElement | HTMLCanvasElement> = document.querySelectorAll('div,canvas')
+let elements2: NodeListOf<HTMLDivElement | HTMLCanvasElement> =
+    document.querySelectorAll('div,canvas')
 
 // 不同元素类型的示例
 let input: HTMLInputElement = document.createElement('input')

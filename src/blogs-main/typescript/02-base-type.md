@@ -19,11 +19,11 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-## 变量声明的三种方式
+## 变量声明
 
 TypeScript 继承了 JavaScript 的变量声明方式，但在作用域和行为上有着重要的区别。
 
-### var 的变量提升
+### 其一 var
 
 ```typescript
 // var 会提升变量的定义到作用域的顶部
@@ -39,7 +39,7 @@ function printA() {
 
 `var` 声明的变量会发生**变量提升**，这意味着变量的声明会被提升到函数作用域的顶部，导致内部的value1覆盖了外部的value1。
 
-### let 的块级作用域
+### 其二 let
 
 ```typescript
 // let 只影响当前作用域的变量
@@ -55,10 +55,11 @@ function printC() {
 
 `let` 声明的变量具有**块级作用域**，内部的value2不会影响外部的value2。
 
-### const 的常量声明
+### 其三 const
+
+const 声明的变量不能被修改
 
 ```typescript
-// const 声明的变量不能被修改
 const b: number = 2
 ```
 
@@ -77,7 +78,7 @@ node index.js
 ts-node index.ts
 ```
 
-## 数字类型 (number)
+## 数字类型
 
 ```typescript
 let num0: number = 111       // 普通数字
@@ -90,7 +91,7 @@ let num5: number = 0xA56D    // 十六进制 (42349)
 
 运行结果：`111 NaN Infinity 7 63 42349`
 
-## 字符串类型 (string)
+## 字符串类型
 
 ```typescript
 let str0: string = 'chulan'   // 普通字符串
@@ -99,7 +100,7 @@ let str1: string = `${num0}`  // 模板字符串
 
 运行结果：`chulan 111`
 
-## 布尔类型 (boolean)
+## 布尔类型
 
 ```typescript
 // 无需多言
@@ -118,7 +119,7 @@ let undefined0: undefined = undefined
 
 在严格模式下，`null` 和 `undefined` 是不同的类型，不能相互赋值。
 
-### void 类型
+### void
 
 ```typescript
 let v1: void = undefined
@@ -133,13 +134,12 @@ function sayHello(): void {
 }
 ```
 
-## 严格模式的影响
+## 严格模式
 
-TypeScript 的严格模式会影响类型检查的严格程度：
+我们可以通过 `tsc --init` 生成 `tsconfig.json`，然后修改 `strict` 为 `false` 来关闭严格模式，此模式会影响类型检查的严格程度：
 
 - `void` 类型不能赋值为 `null`
 - `null` 和 `undefined` 不能相互赋值
-- 可以通过 `tsc --init` 生成 `tsconfig.json`，然后修改 `strict` 为 `false` 来关闭严格模式
 
 ## 小结
 

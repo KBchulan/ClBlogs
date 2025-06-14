@@ -29,11 +29,9 @@ footer: Always coding, always learning
 
 ### 主流编译器对比
 
-| 编译器          | 标准库    | 平台支持            | 特点                     |
-| --------------- | --------- | ------------------- | ------------------------ |
-| **GCC**   | libstdc++ | Linux/Windows/macOS | 开源，标准支持完善       |
-| **Clang** | libc++    | Linux/Windows/macOS | 错误信息友好，编译速度快 |
-| **MSVC**  | MSVC STL  | Windows             | Visual Studio 集成度高   |
+- **GCC**：GNU Compiler Collection，开源编译器，标准库为 `libstdc++`，支持多平台。
+- **Clang**：LLVM 的 C/C++/Objective-C 编译器，开源，标准库为 `libc++`，支持多平台。
+- **MSVC**：Microsoft Visual C++，集成在 Visual Studio 中，标准库为 `MSVC STL`，主要是windows。
 
 ### 推荐配置
 
@@ -75,18 +73,12 @@ CMAKE_GENERATOR=MinGW Makefiles
 
 ### 开发工具配置
 
-#### 推荐工具组合
-
-| 工具类型           | 推荐选择                                          | 说明                                     |
-| ------------------ | ------------------------------------------------- | ---------------------------------------- |
-| **编辑器**   | [Visual Studio Code](https://code.visualstudio.com/) | 轻量级，插件丰富                         |
-| **语言服务** | clangd                                            | 提供 `CMake` 路径支持和优秀的 IntelliSense |
+- **编辑器**：推荐 [Visual Studio Code](https://code.visualstudio.com/)，味大，无需多言
+- **语言服务**：使用 `clangd`，它提供了对 `CMake` 路径的支持和优秀的 IntelliSense 功能。
 
 > 微软的 `c/c++` 插件就是 shit，跟这个没得比。
 
-#### VSCode + clangd 配置
-
-以下是作者推荐的 `clangd` 配置：
+以下是作者的 `clangd` 配置：
 
 ```json
 {

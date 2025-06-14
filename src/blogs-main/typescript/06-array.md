@@ -42,7 +42,7 @@ let a1: Array<number> = [1, 2, 3]
 let a2: Array<string> = ['a', 'b', 'c']
 ```
 
-## 联合类型数组
+## 联合数组
 
 当数组需要包含多种类型时，可以使用联合类型：
 
@@ -76,9 +76,9 @@ let arr9: number[][] = [[1, 2, 3], [4, 5, 6]]
 let arr10: Array<Array<number>> = [[1, 2, 3], [4, 5, 6]]
 ```
 
-## 函数参数中的数组
+## 参数数组
 
-使用剩余参数语法处理不定数量的参数：
+使用剩余参数语法处理不定数量的参数，这个比较常用于我们的模板工具：
 
 ```typescript
 let a5 = (...args: number[]) => {
@@ -107,7 +107,7 @@ console.log(tmp2)  // [1, 2, 3, 4, 5]
 
 ### arguments 对象
 
-`arguments` 是包含所有函数参数的伪数组对象：
+`arguments` 是包含所有函数参数的伪数组对象，只在function中有，箭头函数是没有的：
 
 ```typescript
 function a6(...args: any[]) {
@@ -116,8 +116,6 @@ function a6(...args: any[]) {
   let a: IArguments = arguments  // 正确：使用IArguments内置接口
 }
 ```
-
-**注意**：`arguments` 是伪数组，不能直接当作数组使用，需要转换或使用 `IArguments` 类型。
 
 ### 数组遍历方法
 

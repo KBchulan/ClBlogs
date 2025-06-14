@@ -27,7 +27,7 @@ footer: Always coding, always learning
 
 我们将使用 `rustup` 来安装 Rust。`rustup` 是 Rust 官方的工具链管理器，能够方便地安装、更新和卸载 Rust。
 
-### Linux 系统
+### Linux
 
 ```bash
 # 安装 rustup
@@ -39,7 +39,7 @@ sudo apt install build-essential
 
 > 运行上述命令即可自动安装最新稳定版本的 Rust
 
-### Windows 系统
+### Windows
 
 1. **安装 MSVC 工具链**
    首先安装 [Microsoft Visual Studio Build Tools](https://learn.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022)
@@ -50,27 +50,20 @@ sudo apt install build-essential
 3. **配置环境变量**
    安装完成后，`rustup` 会自动配置环境变量，当然自己搞到环境变量也是一样的
 
-### 常用命令
+### 检查安装
 
-| 操作 | 命令 | 说明 |
-|------|------|------|
-| **更新** | `rustup update` | 更新到最新版本 |
-| **卸载** | `rustup self uninstall` | 完全卸载 rustup 和 Rust |
-| **查看版本** | `cargo --version` <br> `rustc --version` | 验证安装是否成功 |
-
+- **更新**：`rustup update`
+- **卸载**：`rustup self uninstall`
+- **查看版本**：`cargo --version` 或 `rustc --version`
 
 **至此，Rust 安装完成，可喜可贺可喜可贺！**
 
-## 开发环境配置
+## 推荐开发环境
 
-### 推荐工具组合
-
-| 工具类型 | 推荐选择 | 说明 |
-|----------|----------|------|
-| **编辑器** | [Visual Studio Code](https://code.visualstudio.com/) | 轻量级，插件丰富 |
-| **语言服务** | `rust-analyzer` | 提供智能补全、错误检查等 |
-| **配置文件** | `Even Better TOML` | 更好的 TOML 文件支持 |
-| **错误提示** | `Error Lens` | 行内显示错误和警告 |
+- **编辑器**：推荐 [Visual Studio Code](https://code.visualstudio.com/)，味大，无需多言
+- **语言服务**：安装 `rust-analyzer` 插件，提供智能补全、错误检查等功能
+- **配置文件**：安装 `Even Better TOML` 插件，提供更好的 TOML 文件支持
+- **错误提示**：安装 `Error Lens` 插件，可以在代码行内显示错误和警告(真的好用)
 
 ---
 

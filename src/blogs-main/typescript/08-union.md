@@ -24,11 +24,9 @@ footer: Always coding, always learning
 联合类型允许一个变量支持多种类型，使用 `|` 符号连接不同的类型。这在处理可能有多种数据格式的场景时非常有用：
 
 ```typescript
-// 联合类型就是对同一个东西支持多种类型
 let phone: number | string = 18737519552
 phone = '+86-18737519552'
 
-// 输入为数字或者bool类型都会返回实际的布尔类型
 // 比如后端返回的东西里'true'和1都希望表示true，我们可以通过两次取!来实现这个操作
 let fn = (type: number | boolean): boolean => {
   return !!type
@@ -42,15 +40,9 @@ console.log(fn(false)) // false
 
 ## 交叉类型
 
-交叉类型可以合并多个类型，使用 `&` 符号连接。这在需要组合多个接口或类型时特别有用：
+交叉类型可以合并多个类型，使用 `&` 符号连接，这在需要组合多个接口或类型时特别有用。
 
 ```typescript
-// 交叉类型可以合并两个类型
-/**
- * 基础类型交叉没有意义，举一个应用场景：
- * 比如数据库配置，比如基础类型(host + port)我们写了一个interface，后续数据库单独写一个
- * 配置，两者MIXINS后可以作为一个供前端使用的统一配置
- */
 interface People {
   name: string,
   age: number
@@ -71,13 +63,13 @@ fn2({
 })
 ```
 
+这里我们举一个例子，比如现在要在config里增加一个数据库配置，前面已经为基础配置(host + port)写了一个interface，后续数据库单独写一个interface，这两个取一个 & 是不是就ok了，假如你还有其他的如RabbitMQ一类的配置，都可以互不干扰的写进去对吧。
+
 ## 类型断言
 
-类型断言是告诉 TypeScript 编译器变量的具体类型，可以使用 `as` 关键字或尖括号语法。需要注意的是，类型断言只是编译时的类型检查，不会进行实际的类型转换：
+类型断言是告诉 TypeScript 编译器变量的具体类型，可以使用 `as` 关键字或尖括号语法，需要注意的是，类型断言只是编译时的类型检查，不会进行实际的类型转换：
 
 ```typescript
-// 类型断言:即借助as或者泛型的方式告诉ts编译器变量类型
-
 // 此时若是传入string就会调用length方法，若是number就会返回一个undefined
 // 说明这个as只是帮助我们通过这个编译，但是实际的运行时错误无法避免
 let fn3 = (num: number | string): void => {
@@ -94,26 +86,29 @@ console.log(fn4("hello"))  // "hello" (不是 boolean)
 console.log(fn4(123))      // 123 (不是 boolean)
 ```
 
-## 非空断言操作符
+## 运算符补充
+
+前面我们用到了一个空值合并的运算符，那这里自然要汇总一下比较特殊的运算符，基础的加减乘除就不说了。
+
+### 非空断言操作符
 
 使用 `!` 操作符告诉 TypeScript 某个值不会是 `null` 或 `undefined`，但要谨慎使用：
 
 ```typescript
 // 非空断言(!)，这个只是为了去除一些null或者undefined一类的属性
 const func1 = (num: string | null): number => {
-  return num!.length  // 告诉TS num不会是null
+  return num!.length  // 告诉ts num不会是null
 }
 
 console.log(func1("hello"))  // 5
 // console.log(func1(null))  // 运行时会报错
 ```
 
-## 可选链运算符
+### 可选链运算符
 
 使用 `?.` 操作符安全地访问嵌套对象属性，避免因中间某个属性为 `null` 或 `undefined` 而导致的错误：
 
 ```typescript
-// 可选链运算符(?.)
 const obj1 = {
   first: {
     second: {
@@ -130,13 +125,11 @@ const obj2: any = null
 console.log(obj2?.first?.second?.finally) // undefined (不会报错)
 ```
 
-## 空值合并运算符
+### 空值合并运算符
 
 使用 `??` 操作符提供默认值，只有当左侧为 `null` 或 `undefined` 时才使用右侧的值：
 
 ```typescript
-// 空值合并运算符(??)
-// m ?? n如果m不为空就返回m，否则返回n
 let n: number = 11
 const num1: number = n ?? 15
 
@@ -152,13 +145,12 @@ console.log(value1 || 10)  // 10 (因为0是falsy值)
 console.log(value1 ?? 10)  // 0  (因为0不是null或undefined)
 ```
 
-## 数字字面量分隔符
+### 数字字面量分隔符
 
 使用下划线 `_` 作为数字分隔符，提高大数字的可读性：
 
 ```typescript
-// 4.数字字面量(_)
-// 下面两种写法是等价的，只是方便人看
+// 下面两种写法是等价的，但是第二种方便看
 const num2: number = 123456789
 const num3: number = 123_456_789
 

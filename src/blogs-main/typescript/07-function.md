@@ -21,7 +21,7 @@ footer: Always coding, always learning
 
 ## 基础函数定义
 
-TypeScript 中可以为函数的参数和返回值指定类型，确保函数调用的类型安全：
+ts 中可以为函数的参数和返回值指定类型，确保函数调用的类型安全，这里我们写一个简单的累和操作：
 
 ```typescript
 // 指定参数和返回值类型
@@ -40,7 +40,7 @@ console.log(add2(5, 6, 7))   // 18
 
 ## 默认参数和可选参数
 
-支持默认参数和可选参数，提供更灵活的函数调用方式，注意，可选参数必须放在最后：
+当然也是支持默认参数和可选参数的，注意，可选参数必须放在最后：
 
 ```typescript
 // 默认参数
@@ -73,11 +73,8 @@ function add4(person1: Person = { name: 'a', age: 5 },
   return person1.age + person2.age
 }
 
-const result = add4(
-  { name: 'chulan', age: 20 },
-  { name: 'alice', age: 25 }
-)
-console.log(result) // 45
+const result = add4()
+console.log(result) // 11
 ```
 
 ## 函数重载

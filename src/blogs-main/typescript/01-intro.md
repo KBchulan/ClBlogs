@@ -21,9 +21,9 @@ footer: Always coding, always learning
 
 # Typescript 学习之旅
 
-> 本章记录作者学习小满zs大佬的 Typescript 的笔记与心得体会，方便以后复习。
+> 本章记录作者学习 [小满zs](https://space.bilibili.com/99210573?spm_id_from=333.337.0.0) 大佬的 Typescript 的笔记与心得体会，方便以后复习。
 
-## 安装 typescript
+## 安装
 
 ```bash
 npm install -g typescript

@@ -19,13 +19,13 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-## 什么是接口？
+## 接口简介
 
 `interface` 用于定义一个对象必须有什么属性和方法，它类似于一个契约或规范，确保对象具有特定的结构。
 
 ## 基础接口定义
 
-接口要求严格匹配，不能多属性，也不能少属性。所有定义的属性都必须存在。
+接口要求严格匹配，不能多属性，也不能少属性，所有声明的属性都必须存在。
 
 ```typescript
 interface Person1 {
@@ -106,12 +106,11 @@ let person4: Person4 = {
     return false
   }
 }
-// person4.cb = () => true // error: 无法分配到 "cb" ，因为它是只读属性
 ```
 
 ## 接口继承
 
-接口可以通过 `extends` 关键字继承其他接口，支持多重继承：
+接口可以通过 `extends` 关键字继承其他接口，支持多重继承，这个就比较类似于前面的重合了：
 
 ```typescript
 interface Person6 {
@@ -151,7 +150,7 @@ func('chulan')
 
 ## 小结
 
-Interface 还是很重要的，建议多练练手：
+interface 还是很重要的，建议多练练手，主要有如下内容：
 
 1. **基础定义**：接口定义对象的契约，必须严格遵守
 2. **接口合并**：同名接口自动合并，便于扩展

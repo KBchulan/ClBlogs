@@ -19,7 +19,7 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-## 初见 Symbol
+## Symbol
 
 `Symbol` 是 ES6 引入的一种新的原始数据类型，用于创建唯一的标识符。每个 Symbol 值都是独一无二的，即使传入相同的参数，创建的 Symbol 也不相等。
 
@@ -30,7 +30,7 @@ let a2: symbol = Symbol(1)
 console.log(a1 === a2)  // false
 ```
 
-## Symbol.for() 全局注册
+### 全局注册
 
 `Symbol.for()` 方法会在全局 Symbol 注册表中查找是否已经存在指定 key 的 Symbol，如果存在则返回该 Symbol，否则创建一个新的：
 
@@ -38,7 +38,7 @@ console.log(a1 === a2)  // false
 console.log(Symbol.for('huaixi') === Symbol.for('huaixi'))  // true
 ```
 
-## Symbol 作为对象属性
+### 作为对象属性
 
 Symbol 可以作为对象的属性名，这样的属性被称为 Symbol 属性，值得注意的是，使用 Symbol 作为属性名时，需要使用计算属性名语法 `[symbol]`，访问时也需要使用方括号语法：
 
@@ -52,7 +52,7 @@ console.log(obj)
 console.log(obj[a1])  // []来访问
 ```
 
-## Symbol 属性的隐私性
+### 隐私性
 
 Symbol 属性具有很好的隐私性，常规的对象遍历方法无法访问到 Symbol 属性，这种特性使得 Symbol 非常适合用作类的私有成员或者需要隐藏的属性。
 
@@ -66,7 +66,7 @@ console.log(Object.keys(obj))                   // 非symbol
 console.log(Object.getOwnPropertyNames(obj))    // 非symbol
 ```
 
-## 获取 Symbol 属性
+### 获取 Symbol 属性
 
 虽然常规方法无法访问 Symbol 属性，但 TypeScript/JavaScript 提供了专门的方法来获取它们：
 

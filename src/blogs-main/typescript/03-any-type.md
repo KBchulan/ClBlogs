@@ -21,7 +21,7 @@ footer: Always coding, always learning
 
 ## 环境准备
 
-在开始之前，我们需要安装一些必要的工具：
+在开始之前，我们需要安装一些必要的工具，这个其实在上一节已经用到了：
 
 ```bash
 # 安装 ts-node 用于直接运行 TypeScript 文件
@@ -31,20 +31,20 @@ npm install -g ts-node
 npm install @types/node -D
 ```
 
-安装完成后，我们就可以直接运行 TypeScript 文件了：
+安装完成后，我们就可以直接运行 ts 文件了：
 
 ```bash
 ts-node index.ts
 ```
 
-## TypeScript 类型层级
+## 类型层级
 
-TypeScript 的类型系统是分层级的，理解这个层级关系是掌握 TypeScript 的关键：
+TypeScript 的类型系统是分层级的，理解这个层级关系是关键：
 
 ```text
 TypeScript 类型层级（从高到低）：
 1. any, unknown (顶级类型)
-2. object, {}
+2. Object, object, {}
 3. Number, String, Boolean (包装对象类型)
 4. number, string, boolean (原始类型)
 5. 1, 'hello', true (字面量类型)
@@ -53,9 +53,9 @@ TypeScript 类型层级（从高到低）：
 
 **核心原则**：高等级的类型可以覆盖低等级的类型，理解了这个本节就结束了。
 
-## 顶级类型 any， unknown
+## 顶级类型
 
-这两种类型是 TypeScript 中最宽泛的类型，它可以表示任何值，下面的例子换成unknown也可以：
+这两种类型是 ts 中最宽泛的类型，它可以表示任何值，下面的例子换成unknown也可以：
 
 ```typescript
 let a: any = 1
@@ -75,7 +75,7 @@ a = new Object()
 a = new Function()
 ```
 
-## any 与 unknown 的区别
+## 区别
 
 ### 赋值限制
 
@@ -123,7 +123,7 @@ let unknownValue: unknown = 'hello'
 
 ## 常见类型概览
 
-以下是 TypeScript 中常见的类型，我们会在后续章节详细展开：
+以下是 ts 中常见的类型，我们会在后续章节详细展开：
 
 ### 原始类型
 ```typescript
@@ -136,11 +136,11 @@ let big: bigint = 100n
 
 ### 特殊类型
 ```typescript
+let a: any = 'anything'
+let uk: unknown = 'unknown value'
 let n: null = null
 let u: undefined = undefined
 let v: void = undefined
-let a: any = 'anything'
-let uk: unknown = 'unknown value'
 // never 类型表示永远不会有值
 ```
 
