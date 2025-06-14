@@ -1,6 +1,6 @@
 ---
 title: Array
-icon: placeholder
+
 article: true
 order: 6
 star: false

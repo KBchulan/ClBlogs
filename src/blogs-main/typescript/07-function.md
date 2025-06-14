@@ -1,6 +1,6 @@
 ---
 title: Function
-icon: placeholder
+
 article: true
 order: 7
 star: false

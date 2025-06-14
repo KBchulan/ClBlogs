@@ -1,6 +1,6 @@
 ---
 title: Enum
-icon: placeholder
+
 article: true
 order: 12
 star: false

@@ -1,6 +1,6 @@
 ---
 title: Begin
-icon: placeholder
+
 article: true
 order: 1
 star: false

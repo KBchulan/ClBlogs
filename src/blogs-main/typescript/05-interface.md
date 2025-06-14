@@ -1,6 +1,6 @@
 ---
 title: Interface
-icon: placeholder
+
 article: true
 order: 5
 star: false

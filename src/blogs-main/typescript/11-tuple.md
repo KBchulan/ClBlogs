@@ -1,6 +1,6 @@
 ---
 title: Tuple
-icon: placeholder
+
 article: true
 order: 11
 star: false

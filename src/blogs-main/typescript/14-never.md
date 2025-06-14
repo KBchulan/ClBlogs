@@ -1,6 +1,6 @@
 ---
 title: Never
-icon: placeholder
+
 article: true
 order: 14
 star: false

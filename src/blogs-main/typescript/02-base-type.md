@@ -1,6 +1,6 @@
 ---
 title: BasicType
-icon: placeholder
+
 article: true
 order: 2
 star: false

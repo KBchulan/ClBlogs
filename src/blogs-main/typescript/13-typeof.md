@@ -1,6 +1,6 @@
 ---
 title: Typeof
-icon: placeholder
+
 article: true
 order: 13
 star: false

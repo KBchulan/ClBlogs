@@ -1,6 +1,6 @@
 ---
 title: AnyType
-icon: placeholder
+
 article: true
 order: 3
 star: false

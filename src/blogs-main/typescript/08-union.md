@@ -1,6 +1,6 @@
 ---
 title: Union
-icon: placeholder
+
 article: true
 order: 8
 star: false

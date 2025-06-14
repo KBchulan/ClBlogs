@@ -1,6 +1,6 @@
 ---
 title: Symbol
-icon: placeholder
+
 article: true
 order: 15
 star: false

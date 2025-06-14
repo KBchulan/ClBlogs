@@ -1,6 +1,6 @@
 ---
 title: Class
-icon: placeholder
+
 article: true
 order: 10
 star: false

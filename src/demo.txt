@@ -1,3 +1,5 @@
+frontmatter按照以下格式写
+
 ---
 # 标题
 title: VuePress Hope 配置示例
@@ -33,3 +35,13 @@ cover: /assets/imgs/cover.jpg
 
 footer: Always coding, always learning
 ---
+
+命名规则：
+
+分类：
+blogs-main 详细区分是语言还是框架
+pages-other 统一为随笔
+program-main 统一为项目
+
+标签：
+都写成具体的文件夹

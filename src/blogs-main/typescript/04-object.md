@@ -1,6 +1,6 @@
 ---
 title: Object
-icon: placeholder
+
 article: true
 order: 4
 star: false

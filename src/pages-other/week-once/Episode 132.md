@@ -1,6 +1,5 @@
 ---
-title: episode-132
-icon: placeholder
+title: 第 132 话
 article: true
 
 order: 1
@@ -16,7 +15,6 @@ date: 2025-06-04
 
 footer: 现在是发电时间
 ---
-
 <!-- more -->
 
 # 一周一次买下同班同学-132

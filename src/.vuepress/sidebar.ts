@@ -9,44 +9,38 @@ export default sidebar({
   "/blogs-main/": [
     "",
     {
-      text: "modern-cpp",
-      icon: "placeholder",
+      text: "cpp",
       prefix: "modern-cpp/",
       collapsible: true,
       children: "structure",
     },
     {
-      text: "typescript",
-      icon: "placeholder",
-      prefix: "typescript/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
-      text: "rust",
-      icon: "placeholder",
-      prefix: "rust/",
+      text: "vue",
+      prefix: "vue3/",
       collapsible: true,
       children: "structure",
     },
     {
       text: "asio",
-      icon: "placeholder",
       prefix: "asio/",
       collapsible: true,
       children: "structure",
     },
     {
-      text: "concurrent",
-      icon: "placeholder",
-      prefix: "concurrent/",
+      text: "rust",
+      prefix: "rust/",
       collapsible: true,
       children: "structure",
     },
     {
-      text: "vue3",
-      icon: "placeholder",
-      prefix: "vue3/",
+      text: "typescript",
+      prefix: "typescript/",
+      collapsible: true,
+      children: "structure",
+    },
+    {
+      text: "concurrent",
+      prefix: "concurrent/",
       collapsible: true,
       children: "structure",
     },
@@ -62,10 +56,15 @@ export default sidebar({
     "",
     {
       text: "一周一次",
-      icon: "placeholder",
-      prefix: "WeekOnce/",
+      prefix: "week-once/",
       collapsible: true,
       children: "structure",
     },
+    {
+      text: "程序员工作法",
+      prefix: "work-method/",
+      collapsible: true,
+      children: "structure"
+    }
   ],
 });

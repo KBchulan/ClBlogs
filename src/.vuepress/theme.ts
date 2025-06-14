@@ -42,23 +42,23 @@ export default hopeTheme({
   // 加密配置
   encrypt: {
     config: {
-      "/pages-other/WeekOnce/Episode 132": {
+      "/pages-other/week-once/Episode 132": {
         hint: "请输入密码：",
         password: "episode-132",
       },
-      "/pages-other/WeekOnce/Episode 169": {
+      "/pages-other/week-once/Episode 169": {
         hint: "请输入密码：",
         password: "episode-169",
       },
-      "/pages-other/WeekOnce/Episode 229": {
+      "/pages-other/week-once/Episode 229": {
         hint: "请输入密码：",
         password: "episode-229",
       },
-      "/pages-other/WeekOnce/Episode 270": {
+      "/pages-other/week-once/Episode 270": {
         hint: "请输入密码：",
         password: "episode-270",
       },
-      "/pages-other/WeekOnce/Episode 320": {
+      "/pages-other/week-once/Episode 320": {
         hint: "请输入密码：",
         password: "episode-320",
       },

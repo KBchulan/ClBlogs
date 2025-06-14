@@ -1,6 +1,6 @@
 ---
 title: Builtin
-icon: placeholder
+
 article: true
 order: 9
 star: false

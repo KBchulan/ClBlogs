@@ -1,6 +1,5 @@
 ---
 title: Begin
-icon: placeholder
 article: true
 order: 1
 star: false
@@ -16,7 +15,6 @@ date: 2025-06-04
 description: rust 篇章的总览介绍
 footer: Always coding, always learning
 ---
-
 <!-- more -->
 
 # Rust 学习之旅
@@ -43,10 +41,8 @@ sudo apt install build-essential
 
 1. **安装 MSVC 工具链**
    首先安装 [Microsoft Visual Studio Build Tools](https://learn.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022)
-
 2. **安装 Rust**
    从 Rust 官网下载 [rustup 安装程序](https://rustup.rs/)，运行安装即可
-
 3. **配置环境变量**
    安装完成后，`rustup` 会自动配置环境变量，当然自己搞到环境变量也是一样的
 
