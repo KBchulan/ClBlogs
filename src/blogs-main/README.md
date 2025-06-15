@@ -12,9 +12,9 @@ footer: Always coding, always learning
 
 ## 分类目录
 
-- **modern-cpp** - 现代C++
-- **typescript** - TypeScript开发
-- **rust** - Rust语言学习
+- **cpp** - 现代C++
+- **vue** - Vue框架学习
 - **asio** - Boost的网络库
+- **rust** - Rust语言学习
+- **typescript** - TypeScript语言学习
 - **concurrent** - C++并发编程
-- **vue3** - Vue3框架学习
