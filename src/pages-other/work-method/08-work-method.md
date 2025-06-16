@@ -6,7 +6,7 @@ order: 8
 star: false
 
 category:
-  - 随笔
+  - 摘录
 
 tag:
   - 程序员工作法

@@ -65,6 +65,12 @@ export default sidebar({
       prefix: "work-method/",
       collapsible: true,
       children: "structure"
+    },
+    {
+      text: "跟小满学点东西",
+      prefix: "xmzs/",
+      collapsible: true,
+      children: "structure"
     }
   ],
 });

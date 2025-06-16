@@ -15,6 +15,7 @@ date: 2025-06-04
 description: rust起步，经典的hello world
 footer: Always coding, always learning
 ---
+
 <!-- more -->
 
 ## 认识Cargo
