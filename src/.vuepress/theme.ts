@@ -15,6 +15,8 @@ export default hopeTheme({
 
   docsDir: "src",
 
+  darkmode: "enable",
+
   // 导航栏
   navbar,
 
@@ -29,7 +31,6 @@ export default hopeTheme({
   blog: {
     avatar: "/assets/imgs/head.png",
     description: "啥都想学，啥都不会的程序猿",
-    intro: "/intro.html",
     medias: {
       GitHub: "https://github.com/KBchulan",
       QQ: "2262317520",
@@ -133,7 +134,8 @@ export default hopeTheme({
 
         return true;
       },
-      // excerptLength: 200,  // 设置摘要长度
+
+      excerptLength: 0,  // 设置摘要长度
     },
 
     components: {

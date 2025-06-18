@@ -4,15 +4,13 @@ layout: Blog
 icon: house
 title: 首页
 heroText: 欢迎来到KBchulan的博客
+tagline: 愿我们都是在做自己想做的事
+
 heroFullScreen: true
 bgImage: /assets/imgs/bg.png
 bgImageStyle:
-  background-size: cover
-  background-position: center
-  background-repeat: no-repeat
-  background-attachment: scroll
   opacity: 0.25
-tagline: 愿我们都是在做自己想做的事
+  background-attachment: fixed
 
 projects:
   - icon: folder-open
@@ -24,11 +22,6 @@ projects:
     name: LightNovel
     desc: 轻小说阅读App
     link: https://github.com/KBchulan/lightNovel
-
-  - icon: link
-    name: 服务导航
-    desc: 我的云服务器的服务导航
-    link: http://39.105.13.0:50000/index.html
 
 footer: Always coding, always learning
 ---
