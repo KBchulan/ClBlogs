@@ -5,3 +5,5 @@ src/.vuepress/.temp/
 src/.vuepress/dist/
 
 .keep
+
+package-lock.json

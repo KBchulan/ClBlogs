@@ -1,7 +1,7 @@
 ---
 title: SSE
 article: true
-order: 2
+order: 1
 star: true
 
 category:

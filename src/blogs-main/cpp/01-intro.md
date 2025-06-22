@@ -8,14 +8,13 @@ category:
   - 语言
 
 tag:
-  - modern-cpp
+  - cpp
 
 date: 2025-06-04
 
 description: c++ 篇章的总览介绍
 footer: Always coding, always learning
 ---
-
 <!-- more -->
 
 # C++ 学习之旅
@@ -68,7 +67,7 @@ make --version
 CMAKE_GENERATOR=MinGW Makefiles
 ```
 
-我原来写过一个 cmake 的[项目模板](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/modern-cpp/cmake-template)，可以拿来直接使用。
+我原来写过一个 cmake 的[项目模板](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/cpp/cmake-template)，可以拿来直接使用。
 
 ### 开发工具配置
 

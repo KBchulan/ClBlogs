@@ -10,7 +10,7 @@ export default sidebar({
     "",
     {
       text: "cpp",
-      prefix: "modern-cpp/",
+      prefix: "cpp/",
       collapsible: true,
       children: "structure",
     },

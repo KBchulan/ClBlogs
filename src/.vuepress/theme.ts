@@ -15,10 +15,18 @@ export default hopeTheme({
 
   docsDir: "src",
 
+  // 强制暗色
   darkmode: "enable",
 
   // 导航栏
   navbar,
+
+  // 导航栏布局
+  navbarLayout: {
+    start: ["Brand"],
+    center: ["Links"],
+    end: ["Search", "Repo", "Outlook"]
+  },
 
   // 侧边栏
   sidebar,
@@ -113,6 +121,9 @@ export default hopeTheme({
 
   // 在这里配置主题提供的插件
   plugins: {
+    // 启用搜索
+    // slimsearch: true,
+
     blog: {
       filter: (page) => {
         if (page.filePathRelative?.endsWith('README.md')) {
