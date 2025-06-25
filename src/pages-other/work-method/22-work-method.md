@@ -11,7 +11,7 @@ category:
 tag:
   - 程序员工作法
 
-date: 2025-06-28
+date: 2025-06-24
 
 footer: Always coding, always learning
 ---
