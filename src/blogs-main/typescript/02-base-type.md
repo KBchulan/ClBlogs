@@ -23,7 +23,7 @@ footer: Always coding, always learning
 
 TypeScript 继承了 JavaScript 的变量声明方式，但在作用域和行为上有着重要的区别。
 
-### 其一 var
+### var
 
 ```typescript
 // var 会提升变量的定义到作用域的顶部
@@ -39,7 +39,7 @@ function printA() {
 
 `var` 声明的变量会发生**变量提升**，这意味着变量的声明会被提升到函数作用域的顶部，导致内部的value1覆盖了外部的value1。
 
-### 其二 let
+### let
 
 ```typescript
 // let 只影响当前作用域的变量
@@ -55,7 +55,7 @@ function printC() {
 
 `let` 声明的变量具有**块级作用域**，内部的value2不会影响外部的value2。
 
-### 其三 const
+### const
 
 const 声明的变量不能被修改
 
