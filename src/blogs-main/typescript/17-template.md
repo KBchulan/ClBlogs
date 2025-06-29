@@ -1,5 +1,5 @@
 ---
-title: Template
+title: 17 泛型
 
 article: true
 order: 17

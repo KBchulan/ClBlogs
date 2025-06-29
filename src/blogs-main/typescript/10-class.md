@@ -1,5 +1,5 @@
 ---
-title: Class
+title: 10 Class
 
 article: true
 order: 10

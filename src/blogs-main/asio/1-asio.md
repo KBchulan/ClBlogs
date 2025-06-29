@@ -1,5 +1,5 @@
 ---
-title: socket的监听与连接
+title: 01 socket的监听与连接
 
 article: true
 order: 1
@@ -13,7 +13,7 @@ tag:
 
 date: 2025-06-26
 
-description: socket回顾，asio简介，同步API
+description: socket回顾，asio简介，基本API
 footer: Always coding, always learning
 ---
 

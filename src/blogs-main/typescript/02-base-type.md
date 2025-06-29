@@ -1,5 +1,5 @@
 ---
-title: BasicType
+title: 02 基础类型
 
 article: true
 order: 2

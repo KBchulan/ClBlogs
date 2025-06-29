@@ -1,5 +1,5 @@
 ---
-title: Begin
+title: 01 环境配置
 article: true
 order: 1
 star: false
@@ -15,6 +15,7 @@ date: 2025-06-04
 description: c++ 篇章的总览介绍
 footer: Always coding, always learning
 ---
+
 <!-- more -->
 
 # C++ 学习之旅

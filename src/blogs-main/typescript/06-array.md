@@ -1,5 +1,5 @@
 ---
-title: Array
+title: 06 数组
 
 article: true
 order: 6

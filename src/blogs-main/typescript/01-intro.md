@@ -1,5 +1,5 @@
 ---
-title: Begin
+title: 01 环境配置
 
 article: true
 order: 1

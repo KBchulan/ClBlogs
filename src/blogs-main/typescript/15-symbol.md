@@ -1,5 +1,5 @@
 ---
-title: Symbol
+title: 15 symbol
 
 article: true
 order: 15

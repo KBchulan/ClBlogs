@@ -1,5 +1,5 @@
 ---
-title: Typeof
+title: 13 类型别名
 
 article: true
 order: 13
