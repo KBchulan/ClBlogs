@@ -17,6 +17,8 @@ description: buffer底层实现，同步读写
 footer: Always coding, always learning
 ---
 
+<!-- more -->
+
 # buffer结构与同步读写
 
 ## buffer实现
@@ -60,7 +62,7 @@ void use_buffer_1() {
 
 void use_buffer_2() {
   constexpr std::uint16_t BLOCK_SIZE = 20;
-  std::unique_ptr<char> buf{new char[BLOCK_SIZE]};
+  std::unique_ptr<char []> buf{new char[BLOCK_SIZE]};
   // res: mutable_buffer
   auto res = boost::asio::buffer(reinterpret_cast<void*>(buf.get()), BLOCK_SIZE);
 }

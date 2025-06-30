@@ -138,8 +138,8 @@ export default hopeTheme({
           return false;
         }
 
-        // 如果标题以 episode- 开头，则不显示
-        if (page.frontmatter.title?.startsWith("episode-")) {
+        // 如果标题以 第 开头，则不显示
+        if (page.frontmatter.title?.startsWith("第")) {
           return false;
         }
 
