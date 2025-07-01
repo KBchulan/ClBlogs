@@ -1,5 +1,5 @@
 ---
-title: 03 同步服务器的简单实现
+title: 03 同步服务器实现
 
 article: true
 order: 3
@@ -13,7 +13,7 @@ tag:
 
 date: 2025-06-30
 
-description: 实现一个echo的同步服务器
+description: 基于同步API实现一个简单echo的同步服务器(玩具版本)
 footer: Always coding, always learning
 ---
 

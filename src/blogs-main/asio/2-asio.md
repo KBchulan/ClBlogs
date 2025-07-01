@@ -13,7 +13,7 @@ tag:
 
 date: 2025-06-29
 
-description: buffer底层实现，同步读写
+description: buffer的结构、模拟实现以及同步读写API
 footer: Always coding, always learning
 ---
 
@@ -124,7 +124,9 @@ void demonstrate_write_at() {
 }
 ```
 
-对应的读的api分别是 `boost::asio::read`, `boost::asio::read_at`, `socket.receive()` 和 `socket.read_some()`，用法是一毛一样，无需多言。
+对应读的api分别是`boost::asio::read`, `boost::asio::read_at`, `socket.receive()` 和 `socket.read_some()`，用法是相同的。
+
+当然与read/write对应的还有一组 receive/send，这两个api与前面的相比只多了一个额外的标志位，其他是一样的，比较建议使用 write/read 组。
 
 ## 总结
 
