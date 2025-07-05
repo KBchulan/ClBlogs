@@ -318,7 +318,7 @@ void Session::ReadAllFromSocketCb(const boost::system::error_code& errc, std::si
 }
 ```
 
-## 总结时刻
+## 总结
 
 我们首先设计了 `MsgNode` 类来管理读写数据，然后分别介绍了：
 
