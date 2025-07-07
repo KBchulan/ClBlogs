@@ -1,5 +1,5 @@
 ---
-title: 06 异步echo服务器 - 升级
+title: 06 异步echo服务器
 
 article: true
 order: 6
@@ -19,7 +19,7 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-# 06 异步echo服务器 - 升级
+# 06 异步echo服务器
 
 在上一节中，我们提到了一个隐患，即当一个会话挂起多个事件时，如果对端关闭，会导致 Session 对象的多次析构，引发 segfault，同时我们也给出了方案，既然我们想只要有事件就让这个对象存活，那么自然就想到了 `shared_ptr`，来一个事件，计数就 +1，这样就可以解决上节的隐患。
 
