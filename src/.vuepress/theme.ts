@@ -16,7 +16,7 @@ export default hopeTheme({
   docsDir: "src",
 
   // 强制暗色
-  darkmode: "enable",
+  darkmode: "auto",
 
   // 导航栏
   navbar,
@@ -25,7 +25,8 @@ export default hopeTheme({
   navbarLayout: {
     start: ["Brand"],
     center: ["Links"],
-    end: ["Search", "Repo", "Outlook"]
+    // end: ["Search", "Repo", "Outlook"]
+    end: ["Repo", "Outlook"]
   },
 
   // 侧边栏

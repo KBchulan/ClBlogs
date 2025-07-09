@@ -9,6 +9,12 @@ export default sidebar({
   "/blogs-main/": [
     "",
     {
+      text: "go",
+      prefix: "go/",
+      collapsible: true,
+      children: "structure",
+    },
+    {
       text: "cpp",
       prefix: "cpp/",
       collapsible: true,

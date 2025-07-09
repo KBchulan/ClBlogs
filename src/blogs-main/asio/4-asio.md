@@ -13,7 +13,7 @@ tag:
 
 date: 2025-07-01
 
-description: 异步读写API的介绍
+description: 异步读写的API，包含消息节点、session 的简单设计
 footer: Always coding, always learning
 ---
 
