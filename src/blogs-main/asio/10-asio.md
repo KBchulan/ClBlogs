@@ -175,14 +175,69 @@ protoc --cpp_out=. ./person.proto
 
 ```cpp
 #include "person.pb.h"
+#include <string>
 
 int main() {
-  person::data::Person person;
+  person::Person person;
   person.set_name("chulan");
-  person.set_id(55);
-  person.set_email("chulan@gmail.com");
+  person.set_age(20);
+  person.set_sex("man");
+
+  std::string res_str;
+  person.SerializeToString(&res_str);
+  std::cout << res_str << '\n';
+
+  person::Person person2;
+  person2.ParseFromString(res_str);
+  std::cout << person2.name() << ' ' << person2.age() << ' ' << person2.sex() << '\n';
 }
 ```
 
-这里演示了基本的 set 用法，除此以外还有 get 方法，以及序列化、反序列化以及一些其他的方法，看函数名就可以知道大概怎么用这个了。
+这里演示了基本的 set、get 方法，以及序列化、反序列化，还有很多其他的方法，可以直接查看源文件即可，看函数名就可以知道大概怎么用了。
 
+## 服务器修改
+
+对于本次服务器来说，protobuf只能算个添头，毕竟我们主要还是使用json，但是为了后续对分布式系统的支持，如使用grpc，此处展示一下如何使用protobuf。
+
+首先看一下proto文件：
+
+```proto
+syntax = "proto3";
+
+package Data;
+
+message MsgData {
+  int32 id = 1;
+  string data = 2;
+}
+```
+
+对于实际的服务器代码，我们需要修改的地方很少，首先在 cmake 中引入依赖，这一步比较简单，可以看一下[官方示例](https://github.com/protocolbuffers/protobuf/blob/main/examples/CMakeLists.txt)，然后对于业务修改，我们只需要在粘包处理时对接收到的 TLV 中的 V 进行反序列化即可。
+
+```cpp
+// Session::handle_read
+void Session::handle_read() {
+  // 省略原来的代码，然后修改两处调用Send的地方，下面只展示第一处
+
+  // 至此，分支1的接收逻辑走完了，调用Send测试一下
+  Data::MsgData recv_data;
+  recv_data.ParseFromString(std::string(_recv_msg_node->_data, (size_t)_recv_msg_node->_max_len));
+  std::cout << std::format("msg id is: {}, msg data is {}\n", recv_data.id(), recv_data.data());
+
+  Data::MsgData send_data;
+  send_data.set_id(recv_data.id());
+  std::string send_str = "server received. the data is:" +  recv_data.data();
+  send_data.set_data(send_str);
+  std::string return_str;
+  send_data.SerializeToString(&return_str);
+  Send(return_str.data(), return_str.length());
+}
+```
+
+[客户端](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/asio/10-protobuf/client/client.cc)的代码也进行了修改，也是在发送前就进行序列化，以及读取时进行反序列化，可以直接粘过来用，这样就可以直接构建并测试了，至此我们完成了对 protobuf 的引入。
+
+## 总结
+
+本节我们主要介绍了protobuf的安装、语法和如何生成代码，并对服务器进行了修改，protobuf的优点很多，特别是与grpc结合使用，可以实现非常高效的RPC通信，后续会专门介绍。
+
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/asio/10-protobuf/src/main.cc)。
