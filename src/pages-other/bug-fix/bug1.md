@@ -5,7 +5,7 @@ order: 1
 star: true
 
 category:
-  - bug
+  - bug-fix
 
 tag:
   - bug
