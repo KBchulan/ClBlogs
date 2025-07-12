@@ -61,7 +61,7 @@ PS E:\code\ClBlogs-Src\pages-other\bug-fix\bug1\build> .\client.exe
 PS E:\code\ClBlogs-Src\pages-other\bug-fix\bug1\build>
 ```
 
-可以看到，构建和运行都很正常，但是当运行时，没有任何输出，直接退出。
+可以看到，构建系统的生成和构建都很正常，但是当运行时，没有任何输出，直接退出。
 
 ## 问题分析
 
