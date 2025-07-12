@@ -77,6 +77,12 @@ export default sidebar({
       prefix: "xmzs/",
       collapsible: true,
       children: "structure"
+    },
+    {
+      text: "bug排查",
+      prefix: "bug-fix/",
+      collapsible: true,
+      children: "structure"
     }
   ],
 });
