@@ -240,4 +240,6 @@ void Session::handle_read() {
 
 本节我们主要介绍了protobuf的安装、语法和如何生成代码，并对服务器进行了修改，protobuf的优点很多，特别是与grpc结合使用，可以实现非常高效的RPC通信，后续会专门介绍。
 
+本节的核心是：**认识protobuf，并使用protobuf序列化包体**。
+
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/asio/10-protobuf/src/main.cc)。
