@@ -1,5 +1,5 @@
 ---
-title: 04 Object, object, {}
+title: 04 Object
 
 article: true
 order: 4
@@ -162,4 +162,3 @@ const anyObject = {}
 4. **原型链**：理解 JavaScript 对象的继承机制
 
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/04-object/index.ts)。
-

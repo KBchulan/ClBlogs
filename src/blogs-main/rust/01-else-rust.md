@@ -1,6 +1,6 @@
 ---
-title: 附录 A：关键字
-article: false
+title: 附录A：关键字
+article: true
 order: 100
 star: false
 
@@ -18,11 +18,9 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-## 附录 A：关键字
-
 下面的列表包含 Rust 中正在使用或者以后会用到的关键字。因此，这些关键字不能被用作标识符（除了[原生标识符](#原生标识符)），包括函数、变量、参数、结构体字段、模块、包、常量、宏、静态值、属性、类型、特征或生命周期。
 
-### 目前正在使用的关键字
+## 目前正在使用的关键字
 
 如下关键字目前有对应其描述的功能。
 
@@ -63,7 +61,7 @@ footer: Always coding, always learning
 - `where` - 表示一个约束类型的从句
 - `while` - 基于一个表达式的结果判断是否继续循环
 
-### 保留做将来使用的关键字
+## 保留做将来使用的关键字
 
 如下关键字没有任何功能，不过由 Rust 保留以备将来的应用。
 
@@ -83,13 +81,13 @@ footer: Always coding, always learning
 - `virtual`
 - `yield`
 
-### 原生标识符
+## 原生标识符
 
 原生标识符（Raw identifiers）允许你使用通常不能使用的关键字，其带有 `r#` 前缀。
 
 例如，`match` 是关键字。如果尝试编译如下使用 `match` 作为名字的函数：
 
-```rust,ignore,does_not_compile
+```rust
 fn match(needle: &str, haystack: &str) -> bool {
     haystack.contains(needle)
 }

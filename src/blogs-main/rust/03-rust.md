@@ -12,7 +12,7 @@ tag:
 
 date: 2025-07-20
 
-description: rust起步，经典的hello world
+description: Rust中的变量绑定、可变性、解构赋值以及变量遮蔽等核心概念、变量和常量的区别
 footer: Always coding, always learning
 ---
 
@@ -57,7 +57,7 @@ fn main() {
 
 保存文件，再使用 `cargo run` 运行它，迎面而来的是一条错误提示：
 
-```console
+```powershell
 error[E0384]: cannot assign twice to immutable variable `x`
  --> src/main.rs:4:5
   |
@@ -96,7 +96,7 @@ fn main() {
 
 运行程序将得到下面结果：
 
-```console
+```powershell
 The value of x is: 5
 The value of x is: 6
 ```
@@ -118,7 +118,7 @@ fn main() {
 
 使用 `cargo run` 运行下试试:
 
-```shell
+```powershell
 warning: unused variable: `y`
  --> src/main.rs:3:9
   |
@@ -225,7 +225,7 @@ fn main() {
 
 这个程序首先将数值 `5` 绑定到 `x`，然后通过重复使用 `let x =` 来遮蔽之前的 `x`，并取原来的值加上 `1`，所以 `x` 的值变成了 `6`。第三个 `let` 语句同样遮蔽前面的 `x`，取之前的值并乘上 `2`，得到的 `x` 最终值为 `12`。当运行此程序，将输出以下内容：
 
-```console
+```powershell
 The value of x in the inner scope is: 12
 The value of x is: 6
 ```
@@ -246,14 +246,14 @@ let spaces = spaces.len();
 
 这种结构是允许的，因为第一个 `spaces` 变量是一个字符串类型，第二个 `spaces` 变量是一个全新的变量且和第一个具有相同的变量名，且是一个数值类型。所以变量遮蔽可以帮我们节省些脑细胞，不用去想如 `spaces_str` 和 `spaces_num` 此类的变量名；相反我们可以重复使用更简单的 `spaces` 变量名。如果你不用 `let` :
 
-```rust,
+```rust
 let mut spaces = "   ";
 spaces = spaces.len();
 ```
 
 运行一下，你就会发现编译器报错：
 
-```console
+```powershell
 error[E0308]: mismatched types
  --> src/main.rs:3:14
   |

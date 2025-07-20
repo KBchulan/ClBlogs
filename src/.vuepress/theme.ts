@@ -26,7 +26,7 @@ export default hopeTheme({
     start: ["Brand"],
     center: ["Links"],
     // end: ["Search", "Repo", "Outlook"]
-    end: ["Repo", "Outlook"]
+    end: ["Repo", "Outlook"],
   },
 
   // 侧边栏
@@ -122,12 +122,15 @@ export default hopeTheme({
 
   // 在这里配置主题提供的插件
   plugins: {
+    // shikiPlugin配置 - md多语言支持
+
+
     // 启用搜索
     // slimsearch: true,
 
     blog: {
       filter: (page) => {
-        if (page.filePathRelative?.endsWith('README.md')) {
+        if (page.filePathRelative?.endsWith("README.md")) {
           return false;
         }
 
@@ -147,7 +150,7 @@ export default hopeTheme({
         return true;
       },
 
-      excerptLength: 0,  // 设置摘要长度
+      excerptLength: 0, // 设置摘要长度
     },
 
     components: {
