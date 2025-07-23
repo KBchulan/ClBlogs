@@ -95,3 +95,13 @@ void Server::start_accept() {
 ## 性能测试
 
 选择相同的客户端进行测试，多次测试取平均值，最终的成绩是1463ms，嗯，是不如上一节的服务器的，但是作为多线程模型，还是很有必要介绍一下的，毕竟思想才是重心，写法只是呈现。
+
+## 总结
+
+本节我们介绍了另一种多线程模型 `IOThreadPool`，它通过创建多个线程共同运行一个专用的 `io_context` 实例来处理网络事件。
+
+本节的核心是：**所有线程共享同一个 `io_context`**，当事件就绪时，线程池中的一个线程会获取并处理回调，这种方式类似于单 Reactor 多线程的网络并发模型。
+
+虽然在我们的测试中其性能不如 `IOContextPool`，但它展示了另一种重要的多线程设计思想。
+
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/asio/15-iothread_pool/src/main.cc)。
