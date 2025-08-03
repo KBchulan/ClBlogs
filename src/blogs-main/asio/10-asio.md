@@ -49,11 +49,11 @@ pacman -S mingw-w64-ucrt-x86_64-protobuf
 
 我们主要以c++的视角，与proto文件进行对比，此处只是简单介绍使用，更详细的还是要看一下[文档](https://protobuf.dev/)。
 
-你可以把 **`.proto` 看作是一种语言无关的、用于定义数据结构的 "头文件"**，在这里只定义**数据结构**（`message`）和**服务接口**（`service`），而不涉及任何逻辑。
+你可以把 **`.proto` 看作是一种语言无关的、用于定义数据结构的 "头文件"**，在这里只定义**数据结构**（message）和**服务接口**（service），而不涉及任何逻辑。
 
 ### message
 
-`message` 是 Protobuf 中最基本的数据单元，可以类比为 C++ 中的 `struct` 或 `class`，它用来组织一组相关的字段，先看一个简单的例子：
+`message` 是 Protobuf 中最基本的数据单元，可以类比为 C++ 中的 struct 或 class，它用来组织一组相关的字段，先看一个简单的例子：
 
 ```proto
 // 语法声明：必须放在文件第一行，推荐使用 proto3，可以告诉编译器使用proto3语法
