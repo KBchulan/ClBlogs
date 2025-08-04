@@ -13,7 +13,7 @@ tag:
 
 date: 2025-08-04
 
-description: 介绍 TypeScript 中的命名空间（namespace），包括其基本使用、嵌套、合并、抽离和实际应用案例。
+description: 介绍 ts 中的命名空间，虽然这个东西更多的是历史遗留
 footer: Always coding, always learning
 ---
 
