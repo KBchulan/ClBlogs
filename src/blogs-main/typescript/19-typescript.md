@@ -1,5 +1,5 @@
 ---
-title: 19 命名空间介绍
+title: 19 命名空间
 
 article: true
 order: 19

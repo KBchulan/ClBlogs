@@ -53,8 +53,14 @@ export default sidebar({
   ],
 
   // program-main 目录的独立侧边栏
-  "/program-main/": [
+  "/excerpts/": [
     "",
+    {
+      text: "程序员工作法",
+      prefix: "work-method/",
+      collapsible: true,
+      children: "structure"
+    },
   ],
 
   // pages-other 目录的独立侧边栏
@@ -67,14 +73,8 @@ export default sidebar({
       children: "structure",
     },
     {
-      text: "程序员工作法",
-      prefix: "work-method/",
-      collapsible: true,
-      children: "structure"
-    },
-    {
-      text: "跟小满学点东西",
-      prefix: "xmzs/",
+      text: "杂货铺",
+      prefix: "mystore/",
       collapsible: true,
       children: "structure"
     },
