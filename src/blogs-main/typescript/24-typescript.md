@@ -136,4 +136,4 @@ type ArrType = ReturnType<typeof getArr> // number[]
 6.  **`Record<K, T>`**: 创建具有特定键和值类型的对象类型。
 7.  **`ReturnType<T>`**: 获取函数的返回值类型。
 
-本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/24-generic-utility/index.ts)。
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/24-gen-tools/index.ts)。
