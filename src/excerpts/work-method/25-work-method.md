@@ -20,7 +20,7 @@ footer: Always coding, always learning
 
 # 25 快速反馈：为什么你们公司总是做不好持续集成？
 
-在“以终为始”那个模块，我们留下了一个巨大的尾巴。在“[持续集成：集成本身就是写代码的一个环节](https://kbchulan.github.io/ClBlogs/pages-other/work-method/06-work-method.html)”这篇文章中，我们是站在“以终为始”的角度阐述了集成，尤其是持续集成的重要性。
+在“以终为始”那个模块，我们留下了一个巨大的尾巴。在“[持续集成：集成本身就是写代码的一个环节](https://kbchulan.github.io/ClBlogs/excerpts/work-method/06-work-method.html)”这篇文章中，我们是站在“以终为始”的角度阐述了集成，尤其是持续集成的重要性。
 
 但怎么做好持续集成，才是很多人真正关心的内容。今天，我们就来谈谈如何做好持续集成。
 

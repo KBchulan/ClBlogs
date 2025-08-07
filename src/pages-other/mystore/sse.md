@@ -156,4 +156,4 @@ async function startSSE() {
 
 前后端实时通信的方法主要有4种：`短轮询`、`长轮询`、`SSE` 和 `WebSocket`。本来Http2的push也是这么一种方式，但是Google 103放弃了这个API，除此以外，其实还有 [WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport) 这个实验性API可以做到，一个基于 UDP(HTTP/3) 的新玩意，现在的话了解一下就好了。
 
-本节代码详见 [此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/pages-other/xmzs/sse/index.ts)
+本节代码详见 [此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/pages-other/mystore/sse/index.ts)

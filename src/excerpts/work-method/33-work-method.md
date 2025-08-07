@@ -24,7 +24,7 @@ footer: Always coding, always learning
 
 有了这些基础，我们就可以考虑在每次开发完之后，将程序打包部署到环境中。开发完就自动打包，然后自动部署，听起来很像持续集成是不是？
 
-关于持续集成，我在专栏里已经讲过两次，分别讨论了“[为什么要做持续集成](https://kbchulan.github.io/ClBlogs/pages-other/work-method/06-work-method.html)”和“[怎么做好持续集成](https://kbchulan.github.io/ClBlogs/pages-other/work-method/25-work-method.html)”。但持续集成的讨论只停留在开发环节。
+关于持续集成，我在专栏里已经讲过两次，分别讨论了“[为什么要做持续集成](https://kbchulan.github.io/ClBlogs/excerpts/work-method/06-work-method.html)”和“[怎么做好持续集成](https://kbchulan.github.io/ClBlogs/excerpts/work-method/25-work-method.html)”。但持续集成的讨论只停留在开发环节。
 
 有了前面两讲的准备，我们就可以把这个过程再进一步延伸。聪明的你或许已经听出来了，这次我要讲的主题是持续交付。
 

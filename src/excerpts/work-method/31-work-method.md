@@ -20,7 +20,7 @@ footer: Always coding, always learning
 
 # 31 一个好的项目自动化应该是什么样子的？
 
-进入自动化这个模块，我准备从程序员的日常工作开始。介绍"[迭代0](https://kbchulan.github.io/ClBlogs/pages-other/work-method/11-work-method.html)"时，我提到构建脚本是项目准备的一个重要组成部分，但在那一讲中，我并没有具体说构建脚本长成什么样。
+进入自动化这个模块，我准备从程序员的日常工作开始。介绍"[迭代0](https://kbchulan.github.io/ClBlogs/excerpts/work-method/11-work-method.html)"时，我提到构建脚本是项目准备的一个重要组成部分，但在那一讲中，我并没有具体说构建脚本长成什么样。
 
 今天，我们以一个典型的 Java REST 服务为例，介绍一下最基本的构建脚本应该做到什么样子。这里我采用的 Java 技术中最为常见的 Spring Boot 作为基础框架，而构建工具，我选择了 [Gradle](https://gradle.org)。
 

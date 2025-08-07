@@ -82,7 +82,7 @@ footer: Always coding, always learning
 
 **人要负责将业务问题和机器执行连接起来，缺少了业务背景是不可能写出好代码的。**
 
-我们在“[为什么世界和你理解的不一样](https://kbchulan.github.io/ClBlogs/pages-other/work-method/21-work-method.html)”这篇内容中就讲过，沟通的时候，输出时的编码器很重要，它是保证了信息输出准确性的关键。
+我们在“[为什么世界和你理解的不一样](https://kbchulan.github.io/ClBlogs/excerpts/work-method/21-work-method.html)”这篇内容中就讲过，沟通的时候，输出时的编码器很重要，它是保证了信息输出准确性的关键。
 
 很多程序员习惯的方式是用计算机的语言进行表达，就像前面这个例子里面的 map，这是一种数据结构的名字，是面向计算机的，而评审者给出的建议，把变量名改成 accounts，这是一个业务的名字。
 

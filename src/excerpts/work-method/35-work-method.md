@@ -106,7 +106,7 @@ footer: Always coding, always learning
 
 更关键的是，很快它就会复杂到没人知道一共有哪些模块与它相关，改起来会影响到谁，程序员也就越发不愿意维护这段代码了。
 
-我在专栏“[开篇词](https://kbchulan.github.io/ClBlogs/pages-other/work-method/01-work-method.html)”里提到过，人的大脑容量有限，太复杂的东西理解不了。所以，我们唯一能做的就是把复杂的事情变简单。
+我在专栏“[开篇词](https://kbchulan.github.io/ClBlogs/excerpts/work-method/01-work-method.html)”里提到过，人的大脑容量有限，太复杂的东西理解不了。所以，我们唯一能做的就是把复杂的事情变简单。
 
 我在“任务分解”模块中不断强调把事情拆小，同样的道理在写代码中也适用。单一职责原则就是给了你一个指导原则，可以按照不同的 actor 分解代码。
 

@@ -42,7 +42,7 @@ footer: Always coding, always learning
 
 然后，我们要根据优先级从中挑出迭代1要开发的需求，优先级是根据我们要完成的最小可行产品（minimum viable product，MVP）来确定的，这个最小可行产品又是由我们在这个迭代里要验证的内容决定的。一环扣一环，我们就得到了迭代1要做的需求列表。
 
-确定好迭代1要做的需求之后，接下来就要把这些需求细化了，细化到可执行的程度。前面讲[用户故事](https://kbchulan.github.io/ClBlogs/pages-other/work-method/05-work-method.html)时，我们已经说过一个细化需求应该是什么样子的，这里的关键点就是要把验收标准定义清楚。
+确定好迭代1要做的需求之后，接下来就要把这些需求细化了，细化到可执行的程度。前面讲[用户故事](https://kbchulan.github.io/ClBlogs/excerpts/work-method/05-work-method.html)时，我们已经说过一个细化需求应该是什么样子的，这里的关键点就是要把验收标准定义清楚。
 
 所以，我们要在迭代0里，根据优先级来确定迭代1要做的需求，然后进行细化。
 

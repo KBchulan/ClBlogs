@@ -68,11 +68,11 @@ footer: Always coding, always learning
 
 贴近业务，走近客户，我们在这个专栏中已经提到过很多次。但把这件事直接体现在写代码上，恐怕还是很多人不那么习惯的一件事。DDD 最为基础的就是通用语言（Ubiquitous Language），让业务人员和程序员说一样的语言。
 
-这一点我在《[21 | 你的代码为谁而写？](https://kbchulan.github.io/ClBlogs/pages-other/work-method/22-work-method.html)》中已经提到过了。使用通用语言，等于把思考的层次从代码细节中拉到了业务层面。越高层的抽象越稳定，越细节的东西越容易变化。
+这一点我在《[21 | 你的代码为谁而写？](https://kbchulan.github.io/ClBlogs/excerpts/work-method/22-work-method.html)》中已经提到过了。使用通用语言，等于把思考的层次从代码细节中拉到了业务层面。越高层的抽象越稳定，越细节的东西越容易变化。
 
 有了通用语言做基础，然后就要进入到 DDD 的实战环节了。DDD 分为战略设计（Strategic Design）和战术设计（Tactical Design）。
 
-战略设计是高层设计，它帮我们将系统切分成不同的领域，并处理不同领域的关系。我在[前面的内容](https://kbchulan.github.io/ClBlogs/pages-other/work-method/22-work-method.html)中给你举过"订单"和"用户"的例子。从业务上区分，把不同的概念放到不同的地方，这是从根本上解决问题，否则，无论你的代码写得再好，混乱也是不可避免的。而这种以业务的角度思考问题的方式就是 DDD 战略设计带给我的。
+战略设计是高层设计，它帮我们将系统切分成不同的领域，并处理不同领域的关系。我在[前面的内容](https://kbchulan.github.io/ClBlogs/excerpts/work-method/22-work-method.html)中给你举过"订单"和"用户"的例子。从业务上区分，把不同的概念放到不同的地方，这是从根本上解决问题，否则，无论你的代码写得再好，混乱也是不可避免的。而这种以业务的角度思考问题的方式就是 DDD 战略设计带给我的。
 
 战术设计，通常是指在一个领域内，在技术层面上如何组织好不同的领域对象。举个例子，国内的程序员喜欢用 myBatis 做数据访问，而非 JPA，常见的理由是 JPA 在有关联的情况下，性能太差。但真正的原因是没有设计好关联。
 
@@ -98,7 +98,7 @@ Martin Fowler 在写《[企业应用架构模式](http://book.douban.com/subject
 
 你可能又会说了，"我都把限界上下文划出来了，你告诉我不用微服务？"
 
-还记得我在《[30 | 一个好的项目自动化应该是什么样子的？](https://kbchulan.github.io/ClBlogs/pages-other/work-method/31-work-method.html)》中提到的分模块吗？如果你划分出了限界上下文，不妨先按照它划分模块。
+还记得我在《[30 | 一个好的项目自动化应该是什么样子的？](https://kbchulan.github.io/ClBlogs/excerpts/work-method/31-work-method.html)》中提到的分模块吗？如果你划分出了限界上下文，不妨先按照它划分模块。
 
 以我拙见，一次性把边界划清楚并不是一件很容易的事。大家在一个进程里，调整起来会容易很多。然后，让不同的限界上下文先各自独立演化。等着它演化到值得独立部署了，再来考虑微服务拆分的事情。到那时，你也学到各种关于微服务的技术，也就该派上用场了！
 

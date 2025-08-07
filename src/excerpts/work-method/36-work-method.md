@@ -20,7 +20,7 @@ footer: Always coding, always learning
 
 # 36 总是在说MVC分层架构，但你真的理解分层吗？
 
-作为程序员，你一定听说过分层，比如，最常见的 Java 服务端应用的三层结构，在《[15 | 一起练习：手把手带你分解任务](https://kbchulan.github.io/ClBlogs/pages-other/work-method/16-work-method.html)》中，我曾提到过：
+作为程序员，你一定听说过分层，比如，最常见的 Java 服务端应用的三层结构，在《[15 | 一起练习：手把手带你分解任务](https://kbchulan.github.io/ClBlogs/excerpts/work-method/16-work-method.html)》中，我曾提到过：
 
 *   数据访问层，按照传统的说法，叫 DAO（Data Access Object，数据访问对象），按照领域驱动开发的术语，称之为 Repository；
 *   服务层，提供应用服务；

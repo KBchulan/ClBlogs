@@ -94,7 +94,7 @@ footer: Always coding, always learning
 
 如果你把这个问题抛给需求的提出者，我几乎可以肯定，他们给你的答案是，他们提出的需求就是重要的。一种可能是，他们也分不清重要和紧急的差别，正如有时候我们也糊涂一样。
 
-对于这样的场景，我们要做的就是多问一些问题。我在[“精益创业：产品经理不靠谱，你该怎么办？”](https://kbchulan.github.io/ClBlogs/pages-other/work-method/07-work-method.html)文章中说过，默认所有需求都不做，直到弄清楚为什么要做这件事。
+对于这样的场景，我们要做的就是多问一些问题。我在[“精益创业：产品经理不靠谱，你该怎么办？”](https://kbchulan.github.io/ClBlogs/excerpts/work-method/07-work-method.html)文章中说过，默认所有需求都不做，直到弄清楚为什么要做这件事。
 
 同样，需求也没那么重要，直到产品经理能说明白它为什么重要，尤其是为什么比其他需求重要。如果一个产品经理不能把几个需求排出优先级，你就可以把上面学到的内容给他讲一遍。
 
@@ -102,7 +102,7 @@ footer: Always coding, always learning
 
 ## 站在老板面前
 
-在[“解决了很多问题，为什么你依然在‘坑’里？”](https://kbchulan.github.io/ClBlogs/pages-other/work-method/08-work-method.html)文章中，我曾经讲过，大家不要局限于程序员这个角色，不同角色真正的差异是工作上下文的不同。每个人都在自己的上下文里工作，上下文也就局限了很多人的视野。
+在[“解决了很多问题，为什么你依然在‘坑’里？”](https://kbchulan.github.io/ClBlogs/excerpts/work-method/08-work-method.html)文章中，我曾经讲过，大家不要局限于程序员这个角色，不同角色真正的差异是工作上下文的不同。每个人都在自己的上下文里工作，上下文也就局限了很多人的视野。
 
 试想，两个产品经理出现在你面前，一个告诉你，公司要拓展新方向，这个功能要做；另一个却说，公司要进一步盈利，那个功能必须做。
 

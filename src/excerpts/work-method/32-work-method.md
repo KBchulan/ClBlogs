@@ -42,7 +42,7 @@ footer: Always coding, always learning
 
 感谢 Odd-e 的[柴锋](https://chaifeng.com/about/)，有一次，他给我上了一堂 [DevOps 课](https://chaifeng.com/devops-tech-stack/)，他对运维知识的讲解让我茅塞顿开，从此，我的运维知识有了体系。
 
-准确地说，他的这堂课就是讲给程序员的运维课。今天，我就把这个体系按照我的理解，重新整理一遍分享给你，也算是完成一次[知识输出](https://kbchulan.github.io/ClBlogs/pages-other/work-method/29-work-method.html)。
+准确地说，他的这堂课就是讲给程序员的运维课。今天，我就把这个体系按照我的理解，重新整理一遍分享给你，也算是完成一次[知识输出](https://kbchulan.github.io/ClBlogs/excerpts/work-method/29-work-method.html)。
 
 ## Java 知识体系
 

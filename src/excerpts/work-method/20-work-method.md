@@ -24,7 +24,7 @@ footer: Always coding, always learning
 
 产品经理的想法层出不穷，但是，如果我们一味闷着头实现产品经理的想法，无论你有多大的开发团队都是不够用的。我们要学会用最小的代价做产品。
 
-谈到产品这个话题，在 [“精益创业：产品经理不靠谱，你该怎么办？”](https://kbchulan.github.io/ClBlogs/pages-other/work-method/07-work-method.html)这篇文章中，我给你分享了精益创业的理念，任何的想法都要放到真实世界中检验。
+谈到产品这个话题，在 [“精益创业：产品经理不靠谱，你该怎么办？”](https://kbchulan.github.io/ClBlogs/excerpts/work-method/07-work-method.html)这篇文章中，我给你分享了精益创业的理念，任何的想法都要放到真实世界中检验。
 
 我们的直觉当然是把所有的东西都实现了再去检验，但是世界不会停下来等着我们。事实也一次又一次教育我们，“憋大招”的瀑布式软件开发已经成为不合时宜的“老古董”。那我们的理想怎么实现呢？唯有分解。
 
