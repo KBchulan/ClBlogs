@@ -12,7 +12,7 @@ tag:
 
 date: 2025-08-07
 
-description: 所有权和借用相关内容介绍
+description: 所有权和借用相关内容介绍，涵盖所有权、拷贝、移动、借用等内容，以及堆栈的介绍。
 footer: Always coding, always learning
 ---
 
