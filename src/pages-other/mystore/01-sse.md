@@ -5,10 +5,10 @@ order: 1
 star: true
 
 category:
-  - xmzs
+  - 杂货铺
 
 tag:
-  - ai
+  - mystore
 
 date: 2025-06-16
 
