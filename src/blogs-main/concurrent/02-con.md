@@ -149,7 +149,7 @@ void func2() {
 cpp 为我们内置了一个方法：
 
 ```cpp
-std::thread::id std::this_thread::get_id();
+std::thread::id id = std::this_thread::get_id();
 std::print("Current thread ID: {}\n", id);
 ```
 

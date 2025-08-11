@@ -1,9 +1,7 @@
 import { sidebar } from "vuepress-theme-hope";
 
 export default sidebar({
-  "/": [
-    "intro",
-  ],
+  "/": ["intro"],
 
   // blogs-main 目录的独立侧边栏
   "/blogs-main/": [
@@ -33,12 +31,6 @@ export default sidebar({
       children: "structure",
     },
     {
-      text: "rust",
-      prefix: "rust/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
       text: "typescript",
       prefix: "typescript/",
       collapsible: true,
@@ -59,7 +51,7 @@ export default sidebar({
       text: "程序员工作法",
       prefix: "work-method/",
       collapsible: true,
-      children: "structure"
+      children: "structure",
     },
   ],
 
@@ -76,13 +68,13 @@ export default sidebar({
       text: "杂货铺",
       prefix: "mystore/",
       collapsible: true,
-      children: "structure"
+      children: "structure",
     },
     {
       text: "bug排查",
       prefix: "bug-fix/",
       collapsible: true,
-      children: "structure"
-    }
+      children: "structure",
+    },
   ],
 });
