@@ -159,4 +159,23 @@ std::print("Current thread ID: {}\n", id);
 
 - 在Windows平台上，线程的标识符类型是 `HANDLE`，可以使用 `GetCurrentThread()` 来获取。
 
+## thread_local
+
+这里补充一个关键字，`thread_local`：它用于声明线程局部变量，每个线程都有自己的副本，互不干扰。
+
+对于 thread_local 修饰的变量，他会在线程首次访问时进行初始化，当线程退出时，该变量会被销毁，在实现一些缓存或者错误码管理时是比较有用的，如下是基本使用：
+
+```cpp
+void func3() {
+  thread_local int thread_local_var = 0;
+
+  std::jthread thr1{[&]() -> void {
+    thread_local_var++;
+    std::print("Thread 1, thread_local_var: {}\n", thread_local_var);  // 1
+  }};
+
+  std::print("Main Thread, thread_local_var: {}\n", thread_local_var); // 0
+}
+```
+
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/02-thread-control/main.cc)。
