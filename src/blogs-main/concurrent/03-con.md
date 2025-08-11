@@ -11,9 +11,9 @@ category:
 tag:
   - cpp
 
-date: 2025-08-08
+date: 2025-08-11
 
-description: 介绍常见的 9 种锁，以及它们的底层实现，还有死锁的产生与避免。
+description: 介绍常见的 7 种锁，以及它们的底层实现，还有死锁的产生与避免。
 footer: Always coding, always learning
 ---
 
