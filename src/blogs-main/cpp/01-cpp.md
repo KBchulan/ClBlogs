@@ -18,90 +18,107 @@ footer: Always coding, always learning
 
 <!-- more -->
 
-# C++ 学习之旅
+# 01 环境配置
 
-> 本章记录作者学习现代 C++ 的笔记与心得体会， 应该只会记录一些不太熟悉的特性。
+> 本专题记录作者学习现代 C++ 的笔记， 应该只会记录一些不太熟悉的特性。
 
 ## 编译器选择
 
-要想学习现代 C++，一个较高的编译器版本是必不可少的。
+要想学习现代 C++，一个支持最新标准（如 C++20/23）的编译器是必不可少的，主流编译器主要有如下三种：
 
-### 主流编译器对比
+- **GCC**：开源界的老大，跨平台，新标准支持好，标准库为 **libstdc++**。
 
-- **GCC**：GNU Compiler Collection，开源编译器，标准库为 `libstdc++`，支持多平台。
-- **Clang**：LLVM 的 C/C++/Objective-C 编译器，开源，标准库为 `libc++`，支持多平台。
-- **MSVC**：Microsoft Visual C++，集成在 Visual Studio 中，标准库为 `MSVC STL`，主要是windows。
+- **Clang**：由 [LLVM项目](https://github.com/llvm/llvm-project) 提供的 C/C++/Objective-C 编译器，比较知名的是它清晰的错误提示与clangd的良好集成，对于开发是很友好的，标准库为 **libc++**。
 
-### 推荐配置
+- **MSVC**：Windows 平台的官方编译器，集成在 Visual Studio 中，标准库为 **MSVC STL**。
 
-我建议使用 [MSYS2](https://www.msys2.org/) 来安装编译器环境，这个更新很及时，默认下载的 gcc 就是15.1，这里我选择 `ucrt64` 的配置：
+本节我们都会给出怎么安装，可以按需下载：如果基于 linux 环境，直接使用自带的包管理器即可，如果基于 windows 环境，我强烈建议使用 **msys2** 来搭建环境。
 
-```bash
-# 打开 msys2 终端
-pacman -S mingw-w64-ucrt-x86_64-gcc
-pacman -S mingw-w64-ucrt-x86_64-clang
-```
+## MSYS2
 
-### 验证安装
+[MSYS2](https://www.msys2.org/) 是一个 Windows 上的软件分发和构建平台，它提供了一个类 Unix 的 shell 环境和强大的包管理器 pacman，安装环境非常方便，后续很多专题中我们配置环境都是基于这个平台。
 
-把 `ucrt64` 的 `bin` 目录添加到环境变量，然后可以通过以下命令验证安装是否成功：
+### 介绍
 
-```bash
-# 编译器版本
-g++ --version
-clang++ --version
+直接在官网下载并按照默认配置安装即可，随后你会看到多个启动项，我们主要关心两种：
 
-# Make 版本，Windows 下默认应该是 mingw32-make，可以起一个别名方便使用
-make --version
-```
+- **UCRT64**：它使用 Windows 最新的通用 C 运行时，与 MSVC 和现代 Windows API 的兼容性最好。
+- **MINGW64**：它使用旧版的 MSVCRT.dll 作为 C 运行时，在老项目中比较常见。
 
-## 其他配置
+如果你是一个全新的环境或者说要做一个新项目了，首选一定是 **UCRT64**，接下来我们所有的操作都是基于这个环境进行。
 
-### CMake 配置
+### 工具链
 
-如果没有安装 cmake，请从 [官网](https://cmake.org/download/)进行安装。
+首先需要说明的是，UCRT64 环境的包管理器是 **pacman**，如果有用过 archlinux 的话，应该会比较熟悉，当然你也可以看一下 [这篇文章](https://www.atlantic.net/dedicated-server-hosting/how-to-use-pacman-in-arch-linux/) 来快速上手使用。
 
-在 Windows 系统下，默认情况 cmake 会生成 `MSVC` 解决方案。可以通过设置环境变量来使用 `MinGW`：
+首先打开 msys2 终端：
 
 ```bash
-# 设置环境变量
-CMAKE_GENERATOR=MinGW Makefiles
+# 更新包数据库和基础包
+pacman -Syu
+
+# 安装 GCC, Clang, GDB, CMake 和 Ninja 等所有必需工具
+# 此处使用 toolchain 直接安装，如果缺少什么可以自行补充
+pacman -S mingw-w64-ucrt-x86_64-toolchain
 ```
 
-我原来写过一个 cmake 的[项目模板](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/cpp/cmake-template)，可以拿来直接使用。
+这里举一个例子，如果你需要安装 `yaml-cpp`，可以按照如下操作，其他各种第三方库大都可以按照如上方式进行安装：
 
-### 开发工具配置
+```bash
+# 查询包名
+pacman -Ss yaml-cpp
 
-- **编辑器**：推荐 [Visual Studio Code](https://code.visualstudio.com/)，味大，无需多言
-- **语言服务**：使用 `clangd`，它提供了对 `CMake` 路径的支持和优秀的 IntelliSense 功能。
+# 然后找到对应 ucrt64 的包，选择合适的版本后，复制名字进行安装
+pacman -S mingw-w64-ucrt-x86_64-yaml-cpp
+```
 
-> 微软的 `c/c++` 插件就是 shit，跟这个没得比。
+随后把 ucrt64 的 `bin` 目录添加到环境变量，然后打开一下 powershell 验证一下即可：
 
-以下是作者的 `clangd` 配置：
+```bash
+# 2025-8-13
+gcc --version # 15.2.0
+```
+
+## 开发工具
+
+笔者比较喜欢使用 [vscode](https://code.visualstudio.com/)，如果你更倾向于使用 vs 或者 clion，可以直接跳过这一部分。
+
+主要安装两个插件即可：
+
+- clangd：强烈推荐，不止是 IntelliSense，还支持 CMake 路径，以及类似于 clion 的数据类型显示、修改建议等，体验上非常丝滑。
+- CMake Tools：这个插件提供了对 CMake 的支持，可以方便地进行构建和调试。
+
+对于 clangd 配置，笔者的配置如下，可以参考一下，这个属于全局的配置：
 
 ```json
-{
-  "clangd.path": "c:\\Users\\18737\\AppData\\Roaming\\Cursor\\User\\globalStorage\\llvm-vs-code-extensions.vscode-clangd\\install\\19.1.2\\clangd_19.1.2\\bin\\clangd.exe",
-  "clangd.arguments": [
-    "--header-insertion=iwyu",
-    "--compile-commands-dir=${workspaceFolder}",
-    "--query-driver=C:/msys64/ucrt64/bin/*,C:/msys64/mingw64/bin/*",
-    "--background-index",
-    "--all-scopes-completion",
-    "--completion-style=detailed",
-    "--pch-storage=memory"
-  ],
-  "clangd.fallbackFlags": [
-    "-IC:/msys64/ucrt64/include",
-    "-IC:/msys64/mingw64/include",
-    "-std=c++23",
-    "--target=x86_64-w64-mingw32"
-  ]
-}
+"clangd.arguments": [
+  "--query-driver=C:/msys64/ucrt64/bin/*",
+  "--header-insertion=iwyu",
+  "--compile-commands-dir=${workspaceFolder}",
+  "--background-index",
+  "--all-scopes-completion",
+  "--completion-style=detailed",
+  "--pch-storage=memory",
+  "--clang-tidy",
+],
+"clangd.fallbackFlags": [
+  "-IC:/msys64/ucrt64/include",
+  "--target=x86_64-w64-mingw32",
+  "-std=c++23",
+  "-Wno-pragma-pack",
+],
 ```
 
-### 自定义配置
+当然，也可以在项目根目录创建 `.clangd` 文件，对当前项目进行配置，这个会覆盖掉全局配置。
 
-如果需要自定义，可以在项目根目录创建 `.clangd` 配置文件进行自定义设置，这个会覆盖我们的插件设置。
+## 构建系统
 
-**至此，我们的 C++ 开发环境配置完成，可以开始愉快的开始 C++ 的学习之旅啦！**
+上文中我们提到了 CMake，这个是一个构建系统生成器，可以根据配置生成不同平台的构建描述文件，用于构建项目，此处我们介绍一下构建系统常用的都有什么，详情可以自行查阅：
+
+- **构建系统生成器**：cmake、meson、qmake、xmake
+- **构建描述文件**：makefile、.ninja、.vcxproj
+- **构建引擎**：make、ninja、msbuild、nmake、gmake
+
+笔者的配置是 `cmake + ninja`，不管是构建还是编译都是非常的快速，不过在 Windows 系统下，默认情况 cmake 会生成 MSVC 解决方案，可以在环境变量里创建一个 `CMAKE_GENERATOR` 变量，值为 `Ninja`，这样就好了。
+
+我原来写过一个 cmake 的 [项目模板](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/cpp/cmake-template)，可以拿来直接使用。
