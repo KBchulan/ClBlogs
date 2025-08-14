@@ -169,27 +169,32 @@ int main() {
 template <typename T> class Channel {
 public:
   void send(T data) {
-    std::unique_lock<std::mutex> lock{_mtx};
-    if (_stop) {
-      throw std::runtime_error("Channel has been stopped, cannot send data.");
-    }
+    {
+      std::unique_lock<std::mutex> lock{_mtx};
+      if (_stop) {
+        throw std::runtime_error("Channel has been stopped, cannot send data.");
+      }
 
-    _send_cv.wait(lock, [this]() { return !_data.has_value(); });
-    _data = std::move(data);
+      _send_cv.wait(lock, [this]() { return !_data.has_value(); });
+      _data = std::move(data);
+    }
     _recv_cv.notify_one();
   }
 
   std::optional<T> recv() {
-    std::unique_lock<std::mutex> lock{_mtx};
+    std::optional<T> data;
+    {
+      std::unique_lock<std::mutex> lock{_mtx};
 
-    _recv_cv.wait(lock, [this]() { return _stop || _data.has_value(); });
+      _recv_cv.wait(lock, [this]() { return _stop || _data.has_value(); });
 
-    if (_stop && !_data.has_value()) {
-      return std::nullopt;
+      if (_stop && !_data.has_value()) {
+        return std::nullopt;
+      }
+
+      data = std::move(_data);
+      _data.reset();
     }
-
-    std::optional<T> data = std::move(_data);
-    _data.reset();
     _send_cv.notify_one();
     return data;
   }
