@@ -241,9 +241,7 @@ void func8_err() {
 }
 ```
 
-此时编译会报错，显示此回调期望传入一个左值引用类型参数，但实际传入的为一个右值，并不匹配。
-
-如果是普通的函数的话，这个写法是完全可以的，而且我们明明是左值传递，怎么报错我们传入了一个右值，接下来我们分析一下：
+此时编译会报错，显示类型不匹配，但如果是普通的函数的话，这个写法是完全可以的，怎么这里会报错呢，接下来我们分析一下：
 
 在编译期，会进行一段检查，这里需要看一下源码，从进入构造函数开始，会执行如下操作：
 
@@ -254,6 +252,13 @@ thread(_Callable&& __f, _Args&&... __args) {
 static_assert( __is_invocable<typename decay<_Callable>::type, typename decay<_Args>::type...>::value,
   "std::thread arguments must be invocable after conversion to rvalues"
 );
+
+using _Wrapper = _Call_wrapper<_Callable, _Args...>;
+// Create a call wrapper with DECAY_COPY(__f) as its target object
+// and DECAY_COPY(__args)... as its bound argument entities.
+_M_start_thread(_State_ptr(new _State_impl<_Wrapper>(
+    std::forward<_Callable>(__f), std::forward<_Args>(__args)...)), _M_thread_deps_never_run);
+}
 ```
 
 首先，会对所有的参数执行 `decay` 操作，这是一个类型转换操作，会执行如下的行为：
@@ -273,7 +278,7 @@ struct __is_invocable
 
 可以看到，这个 __is_invocable 只是简单继承了一下 __is_invocable_impl，真正的核心在于 __invoke_result 的实现，它会**尝试调用转换后的可调用对象，并获取返回类型**。
 
-此处值得注意的是：**这个模拟调用会把参数作为右值进行传递调用，因为底层会调用 std::move**。
+这里需要注意的是：**我们是直接把退化后的值传入进行模拟，这些值是无法取地址的，也就是右值类型**。
 
 如果调用是合法的，就会产生一个包含返回类型的 type 成员，如果是非法的，那么就会发生替换失败的错误，即编译报错，随后 __is_invocable_impl 就会根据这个返回类型去找模板特化，比如失败的类型：
 
@@ -287,11 +292,11 @@ struct __is_invocable_impl
 
 当然，如果找到了特化版本，那么就会返回成功类型，构造函数的 `static_assert` 就会通过。
 
-至此，我们就走完了这个编译期的检查，简单来说：**对传入的参数进行decay操作，并尝试按照右值参数的方式调用转换后的可调用对象，如果调用失败则触发断言，否则构造成功**。
+至此，我们就走完了这个编译期的检查，简单来说：**对传入的参数进行decay操作，并尝试用退化后的参数调用转换后的可调用对象，如果调用失败则触发断言，否则构造成功**。
 
-此处再看一下线程的本质，是不是就清晰多了：**按值存储可调用对象和所有参数的副本或移动后的版本，然后在新的线程中用这些存储的副本进行调用。**
+此处再看一下线程的本质，是不是就清晰多了：**存储传入函数及参数复制或移动后的副本，然后在新的线程中用这些存储的副本进行调用。**
 
-此时我们再来分析一下这个例子为啥会报错，首先走 decay 变为纯值类型，接着使用 `std::invoke` 进行调用，此时 invoke 会模拟使用这个临时对象进行调用，即给这个 lambda 传入一个纯右值，那自然不匹配要求的左值引用，因此会触发断言。
+此时我们再来分析一下这个例子为啥会报错，首先走 decay 变为纯值类型，接着使用 `std::invoke` 进行调用，此时 invoke 会模拟使用这个临时对象进行调用，但是给这个 lambda 传入的是右值，那自然不匹配要求的左值引用，因此会触发断言。
 
 解决方案也很简单，只需要使用 `std::ref` 或 `std::cref` 包装传入的参数即可：
 
