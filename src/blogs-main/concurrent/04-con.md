@@ -128,6 +128,30 @@ void func1() {
 }
 ```
 
+特别需要注意的是：**async 构造产生的 future 对象，其析构时会阻塞等待任务完成**。这个问题一定要注意，请看如下代码：
+
+```cpp
+void deadLock() {
+  std::print("Begin\n");
+  std::mutex mtx;
+  std::lock_guard<std::mutex> lock(mtx);
+
+  {
+    std::future<void> res = std::async(std::launch::async, [&] -> void {
+      std::print("Async\n");
+      std::lock_guard<std::mutex> lock(mtx);
+      std::print("Async done\n");
+    });
+  }
+
+  std::print("End\n");
+}
+```
+
+按照常理理解，我们启动一个异步任务，他会在后台执行，并在尝试加锁后阻塞，等待主线程输出 `End` 后，继续输出 `Async done`，但是事实上这个函数会导致死锁。
+
+为什么，首先在最开始进行加锁，随后顺序执行进入子作用域，这个异步任务尝试加锁被阻塞，但是 **由于返回的 future 的析构会等待任务完成，因此不会继续向下执行，也就是卡在此函数 12 行处**，因此在使用 async 中一定要注意它的析构可能导致的死锁风险。
+
 ## package_task
 
 与 `std::async` 这种全自动化的工具不同，[packaged_task](https://en.cppreference.com/w/cpp/thread/packaged_task.html) 提供了更灵活的控制，允许用户手动控制任务的启动和执行，它的本质是：**一个特定函数签名的可调用对象的封装器，此封装器与一个 future 对象相关联**。
