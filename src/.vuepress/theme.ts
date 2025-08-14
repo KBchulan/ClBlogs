@@ -16,7 +16,7 @@ export default hopeTheme({
   docsDir: "src",
 
   // 强制暗色
-  darkmode: "auto",
+  // darkmode: "auto",
 
   // 导航栏
   navbar,
@@ -123,7 +123,6 @@ export default hopeTheme({
   // 在这里配置主题提供的插件
   plugins: {
     // shikiPlugin配置 - md多语言支持
-
 
     // 启用搜索
     // slimsearch: true,
