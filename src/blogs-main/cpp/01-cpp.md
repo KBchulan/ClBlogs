@@ -79,6 +79,52 @@ pacman -S mingw-w64-ucrt-x86_64-yaml-cpp
 gcc --version # 15.2.0
 ```
 
+## Ubuntu 22.04
+
+[Ubuntu](https://ubuntu.com/desktop)是一个基于deban的开源操作系统，使用**apt**作为包管理工具。其最新的版本是Ubuntu 24.04LTS，而 22.04 LTS是比较稳定的长期支持版本。
+
+笔者使用Ubuntu 22.04作为另一个系统，其缺憾是apt最高只支持gcc12，而gcc12只能初步支持C++ 14。[gcc](https://gcc.gnu.org/projects/cxx-status.html)和者[clang](https://clang.llvm.org/cxx_status.html)版本对于C++版本的支持情况可以在这里找。
+
+如何在Ubuntu 22.04上使用gcc 15.2.0并使用C++ 23特性？ 直接从gnu官网下载源码编译即可。
+
+1. 下载[gcc 15.2.0](https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/)压缩包，解压并进入`/.../gcc-15.2.0/`
+2. 下载依赖项：
+```bash
+./contrib/download_prerequisites
+```
+3. 创建构建目录并配置：
+```bash
+mkdir build
+cd build
+../configure --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --prefix=/usr/local/gcc-15.2.0 --enable-checking=release --enable-languages=c,c++ --disable-multilib --program-suffix=-15.2.0
+```
+4. 编译和安装 （笔者编译了4个小时以上）
+```bash
+make -j$(nproc)  # 使用所有可用的CPU核心
+sudo make install
+```
+5. 设置优先级和配置环境变量
+```bash
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-15.2.0/bin/g++-15.2.0 150
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-15.2.0/bin/gcc-15.2.0 150
+
+export LD_LIBRARY_PATH=/usr/local/gcc-15.2.0/lib64:$LD_LIBRARY_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/gcc-15.2.0/include/c++/15.2.0:$CPLUS_INCLUDE_PATH
+```
+
+6. 最后测试一下gcc版本即可：
+```bash
+gcc -v
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/local/gcc-15.2.0/libexec/gcc/x86_64-linux-gnu/15.2.0/lto-wrapper
+Target: x86_64-linux-gnu
+Configured with: ./configure -v --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --prefix=/usr/local/gcc-15.2.0 --enable-checking=release --enable-languages=c,c++ --disable-multilib --program-suffix=-15.2.0
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 15.2.0 (GCC) 
+```
+
 ## 开发工具
 
 笔者比较喜欢使用 [vscode](https://code.visualstudio.com/)，如果你更倾向于使用 vs 或者 clion，可以直接跳过这一部分。
