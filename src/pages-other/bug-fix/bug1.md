@@ -87,10 +87,10 @@ During startup program exited with code 0xc0000139.
 
 在 windows 上搜索 DLL 有一套顺序(简化一点)：
 
-1.  **程序所在的目录** (`E:\...\bug1\build`)
-2.  **系统目录** (`C:\WINDOWS\System32`)
-3.  16位系统目录 (`C:\WINDOWS\System`)
-4.  Windows 目录 (`C:\WINDOWS`)
+1.  **程序所在的目录** ( E:\...\bug1\build )
+2.  **系统目录** ( C:\WINDOWS\System32 )
+3.  16位系统目录 ( C:\WINDOWS\System )
+4.  Windows 目录 ( C:\WINDOWS )
 5.  当前工作目录 (Current Working Directory)
 6.  **最后，才会去查找 `PATH` 环境变量中列出的目录**
 

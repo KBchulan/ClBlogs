@@ -81,13 +81,13 @@ gcc --version # 15.2.0
 
 ## Ubuntu 22.04
 
-[Ubuntu](https://ubuntu.com/desktop)是一个基于deban的开源操作系统，使用**apt**作为包管理工具。其最新的版本是Ubuntu 24.04LTS，而 22.04 LTS是比较稳定的长期支持版本。
+[Ubuntu](https://ubuntu.com/desktop)是一个基于deban的开源操作系统，使用**apt**作为包管理工具。其最新的版本是Ubuntu 24.04 LTS，而 22.04 LTS是比较稳定的长期支持版本。
 
-笔者使用Ubuntu 22.04作为另一个系统，其缺憾是apt最高只支持gcc12，而gcc12只能初步支持C++ 14。[gcc](https://gcc.gnu.org/projects/cxx-status.html)和者[clang](https://clang.llvm.org/cxx_status.html)版本对于C++版本的支持情况可以在这里找。
+笔者使用Ubuntu 22.04作为另一个系统，其缺憾是apt最高只支持gcc12，而gcc12只能初步支持C++ 14。[gcc](https://gcc.gnu.org/projects/cxx-status.html)或者 [clang](https://clang.llvm.org/cxx_status.html)版本对于C++版本的支持情况可以在这里找。
 
 如何在Ubuntu 22.04上使用gcc 15.2.0并使用C++ 23特性？ 直接从gnu官网下载源码编译即可。
 
-1. 下载[gcc 15.2.0](https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/)压缩包，解压并进入`/.../gcc-15.2.0/`
+1. 下载 [gcc 15.2.0](https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/)压缩包，解压并进入`/.../gcc-15.2.0/`
 2. 下载依赖项：
 ```bash
 ./contrib/download_prerequisites
@@ -122,7 +122,7 @@ Target: x86_64-linux-gnu
 Configured with: ./configure -v --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --prefix=/usr/local/gcc-15.2.0 --enable-checking=release --enable-languages=c,c++ --disable-multilib --program-suffix=-15.2.0
 Thread model: posix
 Supported LTO compression algorithms: zlib zstd
-gcc version 15.2.0 (GCC) 
+gcc version 15.2.0 (GCC)
 ```
 
 ## 开发工具

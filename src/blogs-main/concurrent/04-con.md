@@ -263,7 +263,7 @@ private:
   explicit ThreadPool(unsigned int size = std::thread::hardware_concurrency()) {
     if (size < 1) {
       _poolSize = 2;
-    }else{
+    } else {
       _poolSize = size;
     }
 
