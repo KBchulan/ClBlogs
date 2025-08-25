@@ -344,6 +344,6 @@ alignas(cache_line_size) std::atomic<size_t> enqueue_pos{0};
 alignas(cache_line_size) std::atomic<size_t> dequeue_pos{0};
 ```
 
-在上述实现中，其实还涉及两个问题：**ABA问题和缓存行对齐**，这两个部分我们并没有详细展开讲解，可以自行查阅。
+在上述实现中，其实还涉及两个知识点：**ABA问题和缓存行对齐**，这两个部分我们并没有详细展开讲解，可以自行查阅。
 
-本节代码详见[此处]()。
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/08-unlock-queue/mpmc_queue.cc)。
