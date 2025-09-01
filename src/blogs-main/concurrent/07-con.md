@@ -174,4 +174,63 @@ void func4() {
 
 > `std::memory_order_consume` 在 cpp26 后被废弃了，因此不作介绍。
 
+## 栅栏
+
+这里补充一个小知识点，在日常使用中，如果我们需要一个同步关系，大多数情况下我们会采用原子变量配合内存序来实现，但是标准库其实还提供了另一种方法 —— **内存栅栏（Memory Fence）**。
+
+内存栅栏的作用是在代码中创建一个同步点，确保在这个点之前和之后的内存操作按照指定的内存序执行，与原子操作不同，内存栅栏本身不涉及数据的读写，它只是插入一个同步指令。
+
+C++ 提供了 `std::atomic_thread_fence` 函数来创建内存栅栏，此处我们略微修改一下本节最开始的宽松内存序的示例函数：
+
+```cpp
+void func6() {
+  std::atomic_bool flag1{false};
+  std::atomic_bool flag2{false};
+  std::atomic_int32_t counter{0};
+
+  std::jthread thr1{[&] -> void {
+    flag1.store(true, std::memory_order_relaxed);
+    // 插入 release fence
+    std::atomic_thread_fence(std::memory_order_release);
+    flag2.store(true, std::memory_order_relaxed);
+  }};
+
+  std::jthread thr2{[&] -> void {
+    while (!flag2.load(std::memory_order_relaxed)) {
+      std::this_thread::yield();
+    }
+
+    // 插入 acquire fence
+    std::atomic_thread_fence(std::memory_order_acquire);
+
+    if (flag1.load(std::memory_order_relaxed)) {
+      counter.fetch_add(1, std::memory_order_relaxed);
+    }
+  }};
+
+  thr1.join();
+  thr2.join();
+  assert(counter.load(std::memory_order_relaxed) == 1);
+}
+```
+
+栅栏的本质还是内存序的问题，除了不涉及直接的变量修改，其余原理与我们先前介绍均保持一致，本例子中基于 acquire + release 实现的栅栏也是为了构造先行关系的同步于。
+
+栅栏更多的是用于需要同步多个非原子变量的场景，它可以根据位置同时影响所有内存操作，在某些架构上，它比直接操作多个原子操作更高效，因此栅栏也可以算是一个不错的优化手段。
+
+除了真实意义上的栅栏，C++ 还提供了 `std::atomic_signal_fence`，它 **只作用于编译器优化，不产生实际的硬件同步指令**。
+
+因此可以配合硬件特性使用，比如我们本文上面提到的 x86 架构不会重排 **写-写** 操作，那 func1 的隐患理论上只需要告诉编译器，你不要重排这两个变量的写操作即可解决，而与编译器交流的方案就是此函数：
+
+```cpp
+std::jthread thr1{[&] -> void {
+  flag1.store(true, std::memory_order_relaxed);
+  std::atomic_signal_fence(std::memory_order_release);
+  flag2.store(true, std::memory_order_relaxed);
+}};
+```
+
+这里再次强调一下，它 **只是告诉编译器不要跨越这个栅栏重排指令，但不会生成任何硬件内存屏障指令**，因此硬件重排仍然无法避免，实际使用中基本只会在信号处理时才可能用的上。
+
+
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/06-atomic/main.cc)。
