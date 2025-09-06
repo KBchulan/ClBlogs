@@ -167,4 +167,4 @@ gcc version 15.2.0 (GCC)
 
 笔者的配置是 `cmake + ninja`，不管是构建还是编译都是非常的快速，不过在 Windows 系统下，默认情况 cmake 会生成 MSVC 解决方案，可以在环境变量里创建一个 `CMAKE_GENERATOR` 变量，值为 `Ninja`，这样就好了。
 
-我原来写过一个 cmake 的 [项目模板](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/cpp/cmake-template)，可以拿来直接使用。
+我原来写过一个 cmake 的 [项目模板](https://github.com/KBchulan/CMakeTemplate)，可以拿来直接使用。
