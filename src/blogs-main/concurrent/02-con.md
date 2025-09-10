@@ -84,8 +84,6 @@ void func1() {
 
 因此在书写时，如果遇到如上两种情况，要特别注意线程的管控权是否被正确转移，所以选择 `std::jthread` 是非常好的，可以避免很多 bug。
 
-> ps: 这个线程的管控权是不是很类似于 [rust的所有权](https://kbchulan.github.io/ClBlogs/blogs-main/rust/05-rust.html#%E6%89%80%E6%9C%89%E6%9D%83%E5%8E%9F%E5%88%99)。
-
 ## RVO/NRVO
 
 这里补充一个小知识点，也就是 RVO/NRVO 优化，首先来看一段代码：
