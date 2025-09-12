@@ -76,7 +76,7 @@ private:
 
 - wait_until：与上面这个相同，只是超时条件是通过时间点来指定的。
 
-- share：**将 future 转换为 [shared_future]((https://en.cppreference.com/w/cpp/thread/shared_future))**，原来的 future 会变成无效的，新生成的 shared_future 会共享同一个共享状态，允许多个线程等待同一个结果。
+- share：**将 future 转换为 [shared_future](https://en.cppreference.com/w/cpp/thread/shared_future)**，原来的 future 会变成无效的，新生成的 shared_future 会共享同一个共享状态，允许多个线程等待同一个结果。
 
 ### 实现原理
 
