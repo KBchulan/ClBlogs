@@ -403,8 +403,4 @@ delete (data as any).age;     // 输出: Name: Jane, Age: undefined
 
 这个例子展示了如何使用 Proxy 和 Reflect 实现一个基础的响应式系统，通过拦截对象的读取和设置操作，我们能够自动收集依赖并在数据变化时触发相应的更新，这种模式被广泛应用于现代前端框架中，如 Vue 3、MobX 等。
 
-## 小结
-
-本节我们介绍了 Proxy 和 Reflect 的基本用法，并通过一个简单的响应式系统示例展示了它们在实际开发中的应用，这个东西其实还是比较常用的，不用记，用到什么就查一下就好了。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/23-proxy-reflect/index.ts)。

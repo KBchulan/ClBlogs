@@ -152,13 +152,4 @@ const anyObject = {}
 // console.log(anyObject.customMethod()) // 但 ts 会报错，因为类型定义中没有这个方法
 ```
 
-## 小结
-
-这一节的这几个类型认识一下即可，但是原型链得好好理解一下：
-
-1. **Object**：最宽泛的类型，但无法访问具体属性
-2. **object**：仅接受非原始类型，更加安全
-3. **{}**：空对象类型，类似 Object 但限制更多，无法访问原型链上的属性
-4. **原型链**：理解 JavaScript 对象的继承机制
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/04-object/index.ts)。

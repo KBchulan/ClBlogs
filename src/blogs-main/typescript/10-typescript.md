@@ -388,15 +388,4 @@ circle.display()
 // Perimeter: 25.132741228718345
 ```
 
-## 小结
-
-类的重要性不必多言，但是各个语言特色不一样，尽量不要把其他语言所谓的最佳实践非得套在ts里，因需制宜才是最好的，这里简单总结一下：
-
-1. **基本用法**：使用 `extends` 继承，`implements` 实现接口约束
-2. **访问修饰符**：`public`、`private`、`protected`、`readonly` 控制访问权限
-3. **super 关键字**：调用父类构造函数和方法，实现代码复用
-4. **静态成员**：属于类本身的属性和方法，无需实例化即可使用
-5. **getter/setter**：提供属性访问控制，实现计算属性和数据验证
-6. **抽象类**：使用 `abstract` 定义基类和抽象方法，强制子类实现
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/10-class/index.ts)。

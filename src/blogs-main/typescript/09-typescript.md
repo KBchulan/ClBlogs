@@ -169,12 +169,4 @@ setLocalStorage('user', { name: 'chulan', age: 20 })
 const user = getLocalStorage<{ name: string; age: number }>('user')
 ```
 
-## 小结
-
-TypeScript 的内置类型系统非常完善，主要包含：
-
-1. **ECMAScript 内置对象**：Number、Date、RegExp、Error 等标准对象类型
-2. **DOM 类型**：HTMLElement 及其子类型，提供完整的 DOM 操作类型支持
-3. **BOM 类型**：Window、Location、Storage 等浏览器对象类型
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/09-builtin/index.ts)。

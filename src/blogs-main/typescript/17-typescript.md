@@ -119,14 +119,4 @@ axios.get<Data>('https://api.example.com/data').then(res => {
 2. 获得完整的代码提示和自动补全
 3. 在开发阶段就发现类型错误，而不是等到运行时
 
-## 小结
-
-泛型是 ts 中的核心特性之一：
-
-1. **函数泛型**：使函数能够处理多种类型，同时保持类型安全
-2. **类型别名和接口泛型**：创建灵活的类型定义
-3. **默认泛型**：为泛型参数提供默认值，简化使用
-4. **实际应用**：在 API 调用、数据处理等场景中提供强类型支持
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/17-template/index.ts)。
-

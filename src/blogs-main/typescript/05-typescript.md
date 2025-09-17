@@ -148,16 +148,4 @@ const func: Func = (name: string) => {
 func('chulan')
 ```
 
-## 小结
-
-interface 还是很重要的，建议多练练手，主要有如下内容：
-
-1. **基础定义**：接口定义对象的契约，必须严格遵守
-2. **接口合并**：同名接口自动合并，便于扩展
-3. **索引签名**：处理动态属性，但要谨慎使用
-4. **可选与只读**：提供灵活性和安全性
-5. **接口继承**：代码复用的重要手段
-6. **函数类型**：让函数签名更加规范
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/05-interface/index.ts)。
-

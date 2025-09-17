@@ -150,14 +150,4 @@ for (const [index, value] of arr11.entries()) {
 }
 ```
 
-## 小结
-
-数组在任何一门语言里都是很重要的结构，值得好好看看：
-
-1. **基本定义**：支持原始类型、泛型、联合类型等多种定义方式
-2. **对象数组**：结合接口确保类型安全
-3. **多维数组**：支持任意维度的数组嵌套
-4. **函数参数**：使用剩余参数处理不定数量参数
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/06-array/index.ts)。
-

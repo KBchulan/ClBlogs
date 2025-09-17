@@ -157,12 +157,4 @@ App is running
 Rendering HTML: Hello, World!
 ```
 
-## 小结
-
-混入（Mixins）是 TypeScript 中一种非常强大的模式，用于实现代码复用和功能组合。
-
-1.  **对象混入**：通过扩展运算符或 `Object.assign` 可以轻松合并多个对象的属性，实现简单的功能组合。
-2.  **类混入**：通过创建返回类的高阶函数，我们可以将多个类的功能动态地“混入”到一个基础类中，绕过了单继承的限制。
-3.  **核心思想**：混入的核心是**组合优于继承**。它让我们能够构建功能强大且灵活的类，而无需创建复杂的继承链。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/21-mixins/index.ts)。

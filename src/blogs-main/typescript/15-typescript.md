@@ -78,15 +78,4 @@ console.log(Reflect.ownKeys(obj))               // 获取所有属性（包括Sy
 - `Object.getOwnPropertySymbols()` 只返回 Symbol 属性
 - `Reflect.ownKeys()` 返回所有属性，包括字符串属性和 Symbol 属性
 
-## 小结
-
-Symbol 是 TypeScript 中一个独特而强大的类型：
-
-1. **唯一性**：每个 Symbol 都是独一无二的
-2. **全局注册**：`Symbol.for()` 提供全局 Symbol 管理
-3. **计算属性**：可以作为对象的动态属性名
-4. **隐私性**：常规遍历方法无法访问，适合私有成员
-5. **专用方法**：需要特殊方法才能获取 Symbol 属性
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/15-symbol/index.ts)。
-

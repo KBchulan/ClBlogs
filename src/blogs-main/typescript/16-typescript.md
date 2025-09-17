@@ -153,12 +153,4 @@ let obj = {
 }
 ```
 
-## 小结
-
-总结一下本节的核心内容：
-1.  **迭代器协议**：一个对象只要有 `[Symbol.iterator]` 方法，就是可迭代的。该方法返回一个有 `next()` 方法的迭代器。
-2.  **生成器**：一种用于快速创建迭代器的语法糖，使用 `yield` 暂停和返回值。
-3.  **for...of**：消费可迭代对象的首选语法，比较常用。
-4.  **自定义迭代**：可以为任何对象实现 `[Symbol.iterator]`，使其能够被 `for...of` 等语法遍历。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/16-iterator/index.ts)。

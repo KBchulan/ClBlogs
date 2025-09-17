@@ -135,14 +135,4 @@ if (true) {
 }
 ```
 
-## 小结
-
-掌握模块的导入导出是进行现代化 TypeScript 开发的基础。
-
-1.  **模块规范**：了解 CommonJS, AMD, UMD, 和 ESM 的历史和区别，知道 ESM 是当前的标准。
-2.  **默认导出**：每个模块仅一个，导入时可任意命名。
-3.  **命名导出**：可有多个，导入时需使用原名，可用 `as` 起别名。
-4.  **命名空间导入**：将模块所有导出成员聚合到一个对象中。
-5.  **动态导入**：按需加载模块，返回一个 Promise，适用于代码分割和性能优化。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/20-import/index.ts)。

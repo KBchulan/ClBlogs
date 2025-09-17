@@ -152,12 +152,4 @@ let func: Function = () => {}
 // interface, class, tuple, enum, Map, Set, WeakMap, WeakSet, Promise等会在后续章节介绍
 ```
 
-## 小结
-
-下面是本节的核心概念：
-
-1. **类型层级**：高等级类型可以包含低等级类型
-2. **类型安全**：优先使用更具体的类型，避免过度依赖顶级类型
-3. **any vs unknown**：`unknown` 更安全，需要类型检查后才能使用
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/03-any-type/index.ts)。

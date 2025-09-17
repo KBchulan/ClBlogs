@@ -213,15 +213,4 @@ type FormRules<T> = {
 type UserFormRules = FormRules<User>
 ```
 
-## 小结
-
-本节内容主要总结如下：
-
-1. **类型推导**：TypeScript 能自动推断大部分类型，减少冗余的类型声明
-2. **推导限制**：无法推导时使用 `any`，应该避免这种情况
-3. **类型别名**：使用 `type` 创建类型别名，比 C 语言的 `typedef` 更强大
-4. **高级用法**：支持条件类型、泛型、映射类型等高级特性
-5. **typeof 操作符**：获取变量的类型，避免重复定义
-6. **实际应用**：在 API 类型定义、状态管理、事件处理等场景中广泛使用
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/13-typeof/index.ts)。

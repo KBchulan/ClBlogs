@@ -104,16 +104,4 @@ ios.pushMessage('Hello', 'news');
 android.pushMessage('World', 'update');
 ```
 
-## 小结
-
-命名空间是 TypeScript 中一个强大的组织代码的工具，尤其是在 ES6 模块系统普及之前。
-
-毕竟现在更推荐使用 ES6 模块，因此命名空间看一下就好。
-
-1.  **基本使用**：使用 **namespace** 关键字定义，**export** 导出成员。
-2.  **嵌套**：支持命名空间内部再定义命名空间，形成层级。
-3.  **合并**：同名命名空间会自动合并，便于扩展。
-4.  **抽离**：可将命名空间拆分到不同文件，通过 **import** 和 **export** 实现模块化。
-5.  **实际应用**：有效避免全局命名冲突，适用于多平台或多模块开发。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/19-namespace/index.ts)。

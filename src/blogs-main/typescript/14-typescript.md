@@ -144,14 +144,4 @@ type Example = {
 type FunctionKeys = FunctionPropertyNames<Example>  // 'greet' | 'calculate'
 ```
 
-## 小结
-
-本节内容主要总结如下：
-
-1. **基本概念**：`never` 表示永不存在的值的类型，是所有类型的子类型
-2. **产生场景**：抛出异常、无限循环、不可能的类型交叉等
-3. **穷尽性检查**：确保 switch 语句或条件分支处理了所有可能的情况
-4. **实际应用**：API 错误处理、状态机、类型过滤、断言函数等
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/14-never/index.ts)。
-

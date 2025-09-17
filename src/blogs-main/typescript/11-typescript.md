@@ -127,17 +127,4 @@ const combined = combineArgs([1, 'hello'], [true, 42])
 // combined 的类型是 [number, string, boolean, number]
 ```
 
-## 小结
-
-读完上文，应该可以看出元组还是很有用的吧，这里我们回顾一下：
-
-1. **固定长度**：元组的长度在定义时就确定，不能动态改变
-2. **类型固定**：每个位置的元素类型都是固定的，提供强类型约束
-3. **可选元素**：支持可选元素，增加使用灵活性
-4. **命名元组**：可以为元素命名，提高代码可读性
-5. **只读支持**：通过 `readonly` 创建不可变元组
-6. **实际应用**：适用于表格数据、多返回值、状态管理等场景
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/11-tuple/index.ts)。
-
-

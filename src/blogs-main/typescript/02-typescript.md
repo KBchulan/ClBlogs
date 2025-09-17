@@ -141,13 +141,4 @@ function sayHello(): void {
 - `void` 类型不能赋值为 `null`
 - `null` 和 `undefined` 不能相互赋值
 
-## 小结
-
-顾名思义，ts的核心在于类型，因此我们应该尽量避免any的滥用(工作的话能跑就行)，但毕竟是自己学的，还是尽量写好点吧，下面是我查到的一些规范：
-
-1. **变量声明**：优先使用 `let` 和 `const`，避免使用 `var`
-2. **类型注解**：明确指定变量类型，方便阅读
-3. **严格模式**：建议开启严格模式，类似于老师督促你写出来好代码
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/02-base-type/index.ts)。
-

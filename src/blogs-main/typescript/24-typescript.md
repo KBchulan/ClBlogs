@@ -124,16 +124,4 @@ const getArr = () => [1, 2, 3]
 type ArrType = ReturnType<typeof getArr> // number[]
 ```
 
-## 小结
-
-本节主要介绍了如下的泛型工具类型，这些东西实现起来也很简单，无需特别记忆。
-
-1.  **`Partial<T>`**: 将所有属性变为可选。
-2.  **`Required<T>`**: 将所有属性变为必选。
-3.  **`Pick<T, K>`**: 从类型中选择指定的属性。
-4.  **`Omit<T, K>`**: 从类型中排除指定的属性。
-5.  **`Exclude<T, U>`**: 从联合类型中排除某些类型。
-6.  **`Record<K, T>`**: 创建具有特定键和值类型的对象类型。
-7.  **`ReturnType<T>`**: 获取函数的返回值类型。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/24-gen-tools/index.ts)。

@@ -183,13 +183,4 @@ user1 = null;
 // WeakSet 同样不可遍历，也没有 size 属性
 ```
 
-## 小结
-
-Map, Set, WeakMap, 和 WeakSet 是 ES6 提供的强大数据结构，为不同的场景提供了专门的解决方案。
-
-1.  **Map**: 提供了真正的键值对映射，键的类型可以是任意值，适用于需要将对象或非字符串值作为键的复杂数据存储。
-2.  **Set**: 存储唯一值的集合，非常适合用于数组去重和判断成员是否存在。
-3.  **WeakMap**: `Map` 的“弱引用”版本，键必须是对象，当键对象被垃圾回收时，对应的键值对会自动移除，可以有效避免内存泄漏。
-4.  **WeakSet**: `Set` 的“弱引用”版本，成员必须是对象，同样用于在不阻止垃圾回收的情况下跟踪对象。
-
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/typescript/22-map-set/index.ts)。
