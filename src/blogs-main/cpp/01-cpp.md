@@ -140,7 +140,7 @@ gcc version 15.2.0 (GCC)
 "clangd.arguments": [
   "--query-driver=C:/msys64/ucrt64/bin/*",
   "--header-insertion=iwyu",
-  "--compile-commands-dir=${workspaceFolder}",
+  "--compile-commands-dir=${workspaceFolder}/build",
   "--background-index",
   "--all-scopes-completion",
   "--completion-style=detailed",

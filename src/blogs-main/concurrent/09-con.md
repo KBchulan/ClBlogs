@@ -13,7 +13,7 @@ tag:
 
 date: 2025-08-30
 
-description: 基于锁操作实现线程安全的栈和队列
+description: 基于锁操作实现线程安全的栈和队列，以及优化的双端队列
 footer: Always coding, always learning
 ---
 
