@@ -18,7 +18,7 @@ footer: Always coding, always learning
 
 传统的HTTP协议是无状态的、单向的，常常是客户端向服务器请求，随后服务器返回数据，但是实际开发中我们经常会有一个需求：需要服务器向客户端推送数据。但是客户端怎么知道服务器什么时候要推送呢，因此最传统的做法就是 **轮询(包括长轮询和短轮询)**，即客户端不断请求，直到服务器这边准备好数据并返回，但是这种方式很显然会很影响服务器的效率，毕竟有大量无效请求。
 
-因此为了解决这种需求，我们常用的方式有 [sse](https://kbchulan.github.io/ClBlogs/pages-other/xmzs/sse.html)，websocket，[WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport)等等方式，本节我们介绍一下其中全双工的协议：**websocket**。
+因此为了解决这种需求，我们常用的方式有 [sse](https://kbchulan.github.io/ClBlogs/pages-other/mystore/01-sse.html)，websocket，[WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport)等等方式，本节我们介绍一下其中全双工的协议：**websocket**。
 
 ## 协议介绍
 
