@@ -1,5 +1,5 @@
 ---
-title: 08 无锁队列
+title: 08 有锁栈、队列
 
 article: true
 order: 8
@@ -11,373 +11,369 @@ category:
 tag:
   - cpp
 
-date: 2025-08-22
+date: 2025-08-30
 
-description: 利用原子操作实现一个无锁队列
+description: 基于锁操作实现线程安全的栈和队列，以及优化的双端队列
 footer: Always coding, always learning
 ---
-
 <!-- more -->
 
-前面两节我们介绍的比较偏理论，接下来我们会基于原子操作实现一些常见的并发数据结构，本节将要实现的目标是 —— **无锁环形队列**。
+# 08 有锁栈、队列
 
-## 环形队列
+本节要实现的目标是: **基于锁操作的栈和队列**，有了前面的基础，本节的内容可以说是非常简单了。
 
-在应用无锁并发时，我们经常会用到一种数据结构——无锁队列，而无锁队列和标准库封装的队列颇有不同，它采用的是环状的队列结构。
+## 有锁栈
 
-**环形队列** 是一种特殊的队列数据结构，它将队列的尾端与头端连接起来，形成一个逻辑上的环形存储空间，主要好处有两个：
-
-- **队列大小固定**：因此不需要引入扩容等机制，避免了动态内存分配带来的开销
-- **操作迅速**：我们只需要移动头尾指针即可实现入队和出队操作，不需要频繁的析构数据
-
-下面我们来看一个环形队列的结构：
-
-![](/assets/pages/concurrent/08-01.png)
-
-图1表示队列为空的时候，head 和 tail 交会在一起，指向同一个扇区。
-
-图2表示当插入一个数字1后，队列大小为1，此时 tail 移动到下一个扇区，1被存储在原来 tail 指向的地方。
-
-图3表示当我们将数字1出队后，head 向后移动一个扇区，此时 head 和 tail 指向同一个扇区，表示队列又为空了，这里也可以体现出环形队列的好处，我们并不需要析构1这个数据，因为后续的入队操作会覆盖掉它。
-
-接着我们再次插入数据，直到队列为满，此时 tail 再走一步就会追上 head，就表示队列满了，由此我们就可以看出写代码时需要判断的地方：
-
-- **队列为空**：head == tail
-- **队列为满**：(tail + 1) % capacity == head
-
-## 有锁版本
-
-我们先来看一个有锁版本的环形队列：
+基于锁的栈实现是最简单直接的并发数据结构之一，我们只需要在标准库的 `std::stack` 基础上添加一个互斥锁即可实现线程安全。
 
 ```cpp
-template <typename T, size_t Capacity> class LockQueue {
-public:
-  LockQueue() : _max_size(Capacity + 1), _data(_alloc.allocate(_max_size)) {}
-
-  ~LockQueue() {
-    std::lock_guard<std::mutex> lock{_mutex};
-    // 调用析构函数
-    while (_size-- > 0) {
-      std::destroy_at(_data + _head);
-      _head = (_head + 1) % _max_size;
-    }
-    // 回收内存
-    _alloc.deallocate(_data, _max_size);
-  }
-
-  template <typename... Args> bool emplace(Args &&...args) {
-    std::lock_guard<std::mutex> lock{_mutex};
-    if (_size == _max_size - 1) {
-      return false; // 队列满
-    }
-    std::construct_at(_data + _tail, std::forward<Args>(args)...);
-    _tail = (_tail + 1) % _max_size;
-    ++_size;
-    return true;
-  }
-
-  bool pop(T &value) {
-    std::lock_guard<std::mutex> lock{_mutex};
-    if (_size == 0) {
-      return false; // 队列空
-    }
-    value = std::move(*(_data + _head));
-    _head = (_head + 1) % _max_size;
-    --_size;
-    return true;
-  }
-
-private:
-  size_t _max_size;
-  size_t _head{0};
-  size_t _tail{0};
-  size_t _size{0};
-
-  std::allocator<T> _alloc;
-  T *_data;
-  std::mutex _mutex;
-};
-```
-
-我们在构造时分配一块内存用于存储数据，入队时调用 `construct_at` 构造数据，并在析构时调用 `destroy_at` 析构数据并回收空间，在这个例子中，我们采用一个互斥锁来保护这个共享资源的变化，整体实现是很简单的。
-
-## 无锁版本
-
-我们尝试将有锁版本改为无锁版本，核心思路是将互斥锁改为原子，采用原子的 CAS 操作来实现，此处给出书中的一段代码，整理之后大概是这样的：
-
-```cpp
-template <typename T, size_t Capacity> class UnlockQueue {
-public:
-  UnlockQueue() : _max_size(Capacity + 1), _data(_alloc.allocate(_max_size)) {}
-
-  ~UnlockQueue() {
-    size_t currentHead = _head.load(std::memory_order_acquire);
-    size_t currentTail = _tail.load(std::memory_order_acquire);
-
-    while (currentHead != currentTail) {
-      std::destroy_at(_data + currentHead);
-      currentHead = (currentHead + 1) % _max_size;
-    }
-
-    _alloc.deallocate(_data, _max_size);
-  }
-
-  template <typename... Args> bool emplace(Args &&...args) {
-    while (true) {
-      size_t currentTail = _tail.load(std::memory_order_relaxed);
-      size_t nextTail = (currentTail + 1) % _max_size;
-
-      if (nextTail == _head.load(std::memory_order_acquire)) {
-        return false; // 队列满
-      }
-
-      if (_tail.compare_exchange_strong(currentTail, nextTail, std::memory_order_release, std::memory_order_relaxed)) {
-        std::construct_at(_data + currentTail, std::forward<Args>(args)...);
-        return true;
-      }
-    }
-  }
-
-  bool pop(T &value) {
-    while (true) {
-      size_t currentHead = _head.load(std::memory_order_relaxed);
-      size_t nextHead = (currentHead + 1) % _max_size;
-
-      if (currentHead == _tail.load(std::memory_order_acquire)) {
-        return false;
-      }
-
-      if (_head.compare_exchange_strong(currentHead, nextHead, std::memory_order_release, std::memory_order_relaxed)) {
-        value = std::move(*(_data + currentHead));
-        std::destroy_at(_data + currentHead);
-        return true;
-      }
-    }
-  }
-
-private:
-  size_t _max_size;
-  std::atomic<size_t> _head{0};
-  std::atomic<size_t> _tail{0};
-
-  std::allocator<T> _alloc;
-  T *_data;
-};
-```
-
-在这个版本中，我们将 `_head` 和 `_tail` 改为原子变量，并使用 `compare_exchange_strong` 的 CAS 操作来更新它们，确保只有一个线程能成功更新指针。
-
-此处可以考虑一下为啥没有选择简单的内存屏障，而是利用了循环的CAS操作？是因为在高并发场景下，多个线程可能同时通过了队列满或队列空的检查，如果不使用CAS，可能会导致多个线程同时修改 `_head` 或 `_tail`，从而造成数据被重复修改。
-
-### 存在的问题
-
-乍一看这个实现没一点毛病，从单生产者单消费者、到多生产者多消费者都能正常工作，但是实际上是存在一个隐患的：
-
-```cpp
-// 问题代码段
-if (_tail.compare_exchange_strong(currentTail, nextTail, std::memory_order_release, std::memory_order_relaxed)) {
-    std::construct_at(_data + currentTail, std::forward<Args>(args)...);  // 危险！
-    return true;
-}
-```
-
-由于我们是先更新了 `_tail`，再构造数据，这就导致了一个问题，**消费者可能会在数据还未构造完成时就读取到这个位置的数据**，从而导致读取到未初始化的数据。
-
-因此，此种实现**只适用于对象构造极快的场景**，否则就会产生问题，对于更为广泛应用的实现，我们需要考虑更复杂的设计。
-
-## 高性能无锁队列
-
-为了解决上述问题，我们需要设计一个真正支持复杂对象的无锁队列，核心思路是引入 **序列号机制** 来确保数据完整性和可见性。
-
-### 设计原理
-
-- **序列号同步机制**：队列的单个数据修改为槽，每个槽位都有一个原子序列号，用于跟踪数据状态
-- **三状态序列号**：
-  - `seq == pos`：槽位可用于入队
-  - `seq == pos + 1`：槽位有数据，可出队
-  - `seq == pos + Capacity`：槽位已出队，可在下一轮重新入队
-- **先构造后可见**：先完成数据构造，再更新序列号使数据对消费者可见
-
-### 实现代码
-
-```cpp
-template <typename T, size_t Capacity>
-class SuperQueue
+template <typename T>
+class LockStack
 {
-private:
-  // 确保容量是2的幂，便于位运算优化
-  static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be power of 2");
-  static_assert(std::is_move_constructible_v<T> || std::is_copy_constructible_v<T>,
-                "T must can be move or copy construction");
-  static_assert(std::is_nothrow_move_constructible_v<T> || std::is_nothrow_copy_constructible_v<T>,
-                "the copy or move shouldn't throw error");
-
-  static constexpr size_t _cache_line_size = 64;
-
-  struct alignas(_cache_line_size) Slot
-  {
-    std::atomic<size_t> _sequence{0};
-    alignas(T) std::array<std::byte, sizeof(T)> _storage;
-
-    T *data() noexcept
-    {
-      return std::launder(reinterpret_cast<T *>(_storage.data()));
-    }
-  };
-
-  alignas(_cache_line_size) std::atomic<size_t> _enqueue_pos{0};
-  alignas(_cache_line_size) std::atomic<size_t> _dequeue_pos{0};
-
-  std::array<Slot, Capacity> _buffer;
-
 public:
-  SuperQueue()
+  LockStack() = default;
+  ~LockStack() = default;
+
+  LockStack(const LockStack& other)
   {
-    // 初始化每个slot的序列号
-    for (size_t i = 0; i < Capacity; ++i)
-    {
-      _buffer[i]._sequence.store(i, std::memory_order_relaxed);
-    }
+    std::lock_guard<std::mutex> lock{other._mtx};
+    _stack = other._stack;
   }
 
-  ~SuperQueue()
+  LockStack& operator=(const LockStack& other)
   {
-    // 析构剩余的元素
-    size_t front = _dequeue_pos.load(std::memory_order_relaxed);
-    size_t back = _enqueue_pos.load(std::memory_order_relaxed);
+    if (this == &other) return *this;
+    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
+    this->_stack = other._stack;
+    return *this;
+  }
 
-    while (front != back)
-    {
-      size_t pos = front & (Capacity - 1);  // 位运算取模
-      if (_buffer[pos]._sequence.load(std::memory_order_acquire) == front + 1)
-      {
-        std::destroy_at(_buffer[pos].data());
-      }
-      ++front;
-    }
+  LockStack(LockStack&& other) noexcept(std::is_nothrow_move_constructible_v<std::stack<T>>)
+  {
+    std::lock_guard<std::mutex> lock{other._mtx};
+    _stack = std::move(other._stack);
+  }
+
+  LockStack& operator=(LockStack&& other) noexcept(std::is_nothrow_move_assignable_v<std::stack<T>>)
+  {
+    if (this == &other) return *this;
+    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
+    this->_stack = std::move(other._stack);
+    return *this;
+  }
+
+  void push(const T& value)
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    _stack.push(value);
+  }
+
+  void push(T&& value)
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    _stack.push(std::move(value));
   }
 
   template <typename... Args>
-  bool emplace(Args &&...args)
+  void emplace(Args&&... args)
   {
-    Slot *slot;
-    size_t pos = _enqueue_pos.load(std::memory_order_relaxed);
+    std::lock_guard<std::mutex> lock{_mtx};
+    _stack.emplace(std::forward<Args>(args)...);
+  }
 
-    while (true)
-    {
-      slot = &_buffer[pos & (Capacity - 1)];
-      size_t seq = slot->_sequence.load(std::memory_order_acquire);
-      intptr_t diff = (intptr_t)seq - (intptr_t)pos;
-
-      if (diff == 0)
-      {
-        // 该位置可以插入，尝试占据这个位置
-        if (_enqueue_pos.compare_exchange_weak(pos, pos + 1, std::memory_order_relaxed))
-        {
-          break;
-        }
-      }
-      else if (diff < 0)
-      {
-        // 队列满
-        return false;
-      }
-      else
-      {
-        // 其他生产者已经占用了这个位置
-        pos = _enqueue_pos.load(std::memory_order_relaxed);
-      }
-    }
-
-    // 在占据的槽中构造元素
-    std::construct_at(slot->data(), std::forward<Args>(args)...);
-
-    // 更新序列号，使数据对消费者可见
-    slot->_sequence.store(pos + 1, std::memory_order_release);
-
+  bool try_pop(T& value)
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    if (_stack.empty()) return false;
+    value = std::move_if_noexcept(_stack.top());
+    _stack.pop();
     return true;
   }
 
-  bool pop(T &result)
+  std::optional<T> pop() noexcept
   {
-    Slot *slot;
-    size_t pos = _dequeue_pos.load(std::memory_order_relaxed);
+    static_assert(std::is_nothrow_move_constructible_v<T>, "this operation need T contains no throw in move cons");
+    std::lock_guard<std::mutex> lock{_mtx};
+    if (_stack.empty()) return std::nullopt;
+    std::optional<T> result{std::move(_stack.top())};
+    _stack.pop();
+    return result;
+  }
 
-    while (true)
+  std::optional<T> top() const
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    if (_stack.empty()) return std::nullopt;
+    return std::optional<T>{_stack.top()};
+  }
+
+  bool empty() const noexcept
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    return _stack.empty();
+  }
+
+  size_t size() const noexcept
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    return _stack.size();
+  }
+
+  void clear() noexcept
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    while (!_stack.empty())
     {
-      slot = &_buffer[pos & (Capacity - 1)];
-      size_t seq = slot->_sequence.load(std::memory_order_acquire);
-      intptr_t diff = (intptr_t)seq - (intptr_t)(pos + 1);
-
-      if (diff == 0)
-      {
-        // 尝试更新出队位置
-        if (_dequeue_pos.compare_exchange_weak(pos, pos + 1, std::memory_order_relaxed))
-        {
-          break;
-        }
-      }
-      else if (diff < 0)
-      {
-        // 队列空
-        return false;
-      }
-      else
-      {
-        // 其他消费者已经占用了这个位置
-        pos = _dequeue_pos.load(std::memory_order_relaxed);
-      }
+      _stack.pop();
     }
+  }
 
-    // 读取数据
-    result = std::move(*slot->data());
-    std::destroy_at(slot->data());
+private:
+  std::stack<T> _stack;
+  mutable std::mutex _mtx;
+};
+```
 
-    // 更新序列号，使位置对生产者可用
-    slot->_sequence.store(pos + Capacity, std::memory_order_release);
+值得注意的只有 2 点：
 
+- mutex 应该使用 mutable 修饰，因为我们在一些 const 函数中使用到了。
+- 使用 optional 处理空栈异常，而不是传统的 try、catch，当然也可以使用 `std::expected` 来代替这个。
+
+整体的实现是非常简单的，我们给所有操作都上了锁，足以保证操作原子性和异常安全性，但是也正因为如此，性能开销是十分巨大的，会有大量的锁竞争，因此这个有锁栈只能用于并发程度不高的情况，大多就是原型的开发，对于更为高性能的无锁栈，我们在后续章节介绍。
+
+## 有锁队列
+
+那对应有锁队列的实现其实也大同小异，为了有一些区分，我们此处使用条件变量的方式来实现：
+
+```cpp
+template <typename T>
+class LockQueue
+{
+public:
+  LockQueue() = default;
+  ~LockQueue() = default;
+
+  LockQueue(const LockQueue& other)
+  {
+    std::lock_guard<std::mutex> lock{other._mtx};
+    _queue = other._queue;
+  }
+
+  LockQueue& operator=(const LockQueue& other)
+  {
+    if (this == &other) return *this;
+    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
+    this->_queue = other._queue;
+    if (!this->_queue.empty())
+    {
+      _cv.notify_all();
+    }
+    return *this;
+  }
+
+  LockQueue(LockQueue&& other) noexcept(std::is_move_constructible_v<std::queue<T>>)
+  {
+    std::lock_guard<std::mutex> lock{other._mtx};
+    _queue = std::move(other._queue);
+  }
+
+  LockQueue& operator=(LockQueue&& other) noexcept(std::is_move_assignable_v<std::queue<T>>)
+  {
+    if (this == &other) return *this;
+    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
+    this->_queue = std::move(other._queue);
+    if (!this->_queue.empty())
+    {
+      _cv.notify_all();
+    }
+    return *this;
+  }
+
+  void push(const T& value)
+  {
+    {
+      std::lock_guard<std::mutex> lock{_mtx};
+      _queue.push(value);
+    }
+    _cv.notify_one();
+  }
+
+  void push(T&& value)
+  {
+    {
+      std::lock_guard<std::mutex> lock{_mtx};
+      _queue.push(std::move(value));
+    }
+    _cv.notify_one();
+  }
+
+  template <typename... Args>
+  void emplace(Args&&... args)
+  {
+    {
+      std::lock_guard<std::mutex> lock{_mtx};
+      _queue.emplace(std::forward<Args>(args)...);
+    }
+    _cv.notify_one();
+  }
+
+  bool try_pop(T& value)
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    if (_queue.empty()) return false;
+    value = std::move_if_noexcept(_queue.front());
+    _queue.pop();
     return true;
   }
+
+  std::optional<T> pop() noexcept
+  {
+    static_assert(std::is_nothrow_move_constructible_v<T>, "this operation need T contains no throw in move cons");
+    std::unique_lock<std::mutex> lock{_mtx};
+    _cv.wait(lock, [this]() -> bool { return !_queue.empty(); });
+    std::optional<T> result{std::move(_queue.front())};
+    _queue.pop();
+    return result;
+  }
+
+  bool empty() const noexcept
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    return _queue.empty();
+  }
+
+  size_t size() const noexcept
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    return _queue.size();
+  }
+
+  void clear() noexcept
+  {
+    std::lock_guard<std::mutex> lock{_mtx};
+    while (!_queue.empty())
+    {
+      _queue.pop();
+    }
+  }
+
+private:
+  std::queue<T> _queue;
+  mutable std::mutex _mtx;
+  std::condition_variable _cv;
 };
 ```
 
-### 设计解析
+此时，再来看一下这两个实现，我们会发现，所有的操作都加了锁，好像除了保证操作的原子性没有任何好处，它只能确保所有读写操作串行化执行，但是由于锁的存在，它的效率本质上是比单线程更低的。
 
-整个设计是非常巧妙的，被称为 **Dmitry Vyukov's MPMC Queue**，可以说是无锁编程的经典之作，下面我们来详细解析一下这个实现：
+## 双锁队列优化
 
-**可见顺序**
+为了提高有锁队列的并发性能，我们可以通过分离头尾操作来实现更细粒度的锁控制。基本思想是：**队列的插入操作只需要对尾部加锁，删除操作只需要对头部加锁，这样就可以实现插入和删除操作的并行执行**。
 
-确保消费者只能看到完全构造好的数据，以解决之前版本的数据可见性竞争问题。
-
-```cpp
-// 生产者：先构造数据，再更新序列号
-std::construct_at(&slot->data, std::forward<Args>(args)...);
-slot->sequence.store(pos + 1, std::memory_order_release);  // 数据构造完才可见
-```
-
-**位运算优化**
-
-要求容量必须是2的幂，使用位与运算替代模运算，大幅提升性能。
+下面是基于链表的双锁队列实现：
 
 ```cpp
-static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be power of 2");
-slot = &buffer[pos & (Capacity - 1)];  // 替代 pos % Capacity
-```
+template <typename T>
+class LockQueueInList
+{
+public:
+  LockQueueInList() : _head(new Node), _tail(_head), _size(0)
+  {
+  }
 
-**缓存行对齐优化**
+  ~LockQueueInList()
+  {
+    while (Node* const old_head = _head)
+    {
+      _head = _head->_next;
+      delete old_head;
+    }
+  }
 
-`enqueue_pos` 和 `dequeue_pos` 分别对齐到独立的缓存行，同时每个槽位也对齐到缓存行，从而减少伪共享。
+  LockQueueInList(const LockQueueInList&) = delete;
+  LockQueueInList& operator=(const LockQueueInList&) = delete;
 
-```cpp
-struct alignas(64) Slot {
-    std::atomic<size_t> sequence{0};
-    T data;
+  void push(T item)
+  {
+    Node* const new_node = new Node();
+
+    {
+      std::lock_guard<std::mutex> lock{_tail_mtx};
+      _tail->_data = std::move(item);
+      _tail->_next = new_node;
+      _tail = _tail->_next;
+      _size.fetch_add(1, std::memory_order_acq_rel);
+    }
+
+    _size.notify_one();
+  }
+
+  std::optional<T> try_pop()
+  {
+    std::lock_guard<std::mutex> lock{_head_mtx};
+    if (empty())
+    {
+      return std::nullopt;
+    }
+    return pop_head();
+  }
+
+  std::optional<T> pop()
+  {
+    std::unique_lock<std::mutex> lock{_head_mtx};
+    while (true)
+    {
+      if (_size.load(std::memory_order_acquire) > 0)
+      {
+        return pop_head();
+      }
+      lock.unlock();
+      _size.wait(0, std::memory_order_acquire);
+      lock.lock();
+    }
+  }
+
+  bool empty() const
+  {
+    return _size.load(std::memory_order_acquire) == 0;
+  }
+
+private:
+  struct Node
+  {
+    std::optional<T> _data;
+    Node* _next;
+
+    Node() : _next(nullptr)
+    {
+    }
+  };
+
+  std::optional<T> pop_head()
+  {
+    Node* const old_head = _head;
+    _head = old_head->_next;
+    std::optional<T> result = std::move(old_head->_data);
+
+    delete old_head;
+    _size.fetch_sub(1, std::memory_order_acq_rel);
+
+    return result;
+  }
+
+  Node* _head;
+  Node* _tail;
+  std::atomic<size_t> _size;
+  mutable std::mutex _head_mtx;
+  mutable std::mutex _tail_mtx;
 };
-
-alignas(cache_line_size) std::atomic<size_t> enqueue_pos{0};
-alignas(cache_line_size) std::atomic<size_t> dequeue_pos{0};
 ```
 
-在上述实现中，其实还涉及两个知识点：**ABA问题和缓存行对齐**，这两个部分我们并没有详细展开讲解，可以自行查阅。
+这里说一下这个双端队列的设计优势：
 
-本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/08-unlock-queue/mpmc_queue.cc)。
+- **分离头尾锁**：使用 `_head_mtx` 保护头部操作，`_tail_mtx` 保护尾部操作，实现读写操作的并行化。
+- **原子计数器**：使用原子操作的 notify 系列操作实现高效的阻塞等待，避免使用传统的条件变量。
+
+相比于单锁队列，本队列在高并发场景下效果更好，但是内存的分配确实是一个问题，可以留作自己动手: **如何为这个双锁队列设计一个节点内存池**？
+
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/08-stack-queue/queue.cc)。

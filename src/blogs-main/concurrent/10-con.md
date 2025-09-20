@@ -1,5 +1,5 @@
 ---
-title: 10 有锁散列表、链表
+title: 10 无锁队列
 
 article: true
 order: 10
@@ -11,245 +11,373 @@ category:
 tag:
   - cpp
 
-date: 2025-09-16
+date: 2025-08-22
 
-description: 基于读写锁的并发散列表实现，使用分桶策略优化并发性能，以及基本的并发链表
+description: 利用原子操作实现一个无锁队列
 footer: Always coding, always learning
 ---
 
 <!-- more -->
 
-# 10 有锁散列表、链表
+前面两节我们介绍的比较偏理论，接下来我们会基于原子操作实现一些常见的并发数据结构，本节将要实现的目标是 —— **无锁环形队列**。
 
-本节要实现的目标是: **基于读写锁的并发散列表实现，使用分桶策略优化并发性能，以及基本的并发链表**。
+## 环形队列
 
-## 散列表
+在应用无锁并发时，我们经常会用到一种数据结构——无锁队列，而无锁队列和标准库封装的队列颇有不同，它采用的是环状的队列结构。
 
-散列表（Hash Table）是一种通过哈希函数将键映射到桶中的数据结构，从而实现高效的查找、插入和删除操作，核心在于：
+**环形队列** 是一种特殊的队列数据结构，它将队列的尾端与头端连接起来，形成一个逻辑上的环形存储空间，主要好处有两个：
 
-- **哈希函数**：将任意键转换为数组索引的函数，最理想的哈希函数是能做到 **键均匀分布，且没有冲突**。
-- **哈希冲突**：当两个不同的键映射到同一个索引时，即发生冲突，这就是哈希冲突，常见的解决方法是 **链表法、开放寻址法**。
+- **队列大小固定**：因此不需要引入扩容等机制，避免了动态内存分配带来的开销
+- **操作迅速**：我们只需要移动头尾指针即可实现入队和出队操作，不需要频繁的析构数据
 
-在并发场景下，为了保证散列表的线程安全，必须对访问进行同步，一种简单的方法是使用单个全局锁来保护整个数据结构，但这会使所有操作串行化，严重限制并发性能。
+下面我们来看一个环形队列的结构：
 
-更优的策略是采用 **分桶锁（Lock Striping）**，即为每个桶或一组桶分配独立的锁，这样，不同线程访问不同桶时可以并行执行，显著提高吞吐量。
+![](/assets/pages/concurrent/08-01.png)
+
+图1表示队列为空的时候，head 和 tail 交会在一起，指向同一个扇区。
+
+图2表示当插入一个数字1后，队列大小为1，此时 tail 移动到下一个扇区，1被存储在原来 tail 指向的地方。
+
+图3表示当我们将数字1出队后，head 向后移动一个扇区，此时 head 和 tail 指向同一个扇区，表示队列又为空了，这里也可以体现出环形队列的好处，我们并不需要析构1这个数据，因为后续的入队操作会覆盖掉它。
+
+接着我们再次插入数据，直到队列为满，此时 tail 再走一步就会追上 head，就表示队列满了，由此我们就可以看出写代码时需要判断的地方：
+
+- **队列为空**：head == tail
+- **队列为满**：(tail + 1) % capacity == head
+
+## 有锁版本
+
+我们先来看一个有锁版本的环形队列：
 
 ```cpp
-template <typename Key, typename Value, typename Hash = std::hash<Key>>
-class LockLookupTable
+template <typename T, size_t Capacity> class LockQueue {
+public:
+  LockQueue() : _max_size(Capacity + 1), _data(_alloc.allocate(_max_size)) {}
+
+  ~LockQueue() {
+    std::lock_guard<std::mutex> lock{_mutex};
+    // 调用析构函数
+    while (_size-- > 0) {
+      std::destroy_at(_data + _head);
+      _head = (_head + 1) % _max_size;
+    }
+    // 回收内存
+    _alloc.deallocate(_data, _max_size);
+  }
+
+  template <typename... Args> bool emplace(Args &&...args) {
+    std::lock_guard<std::mutex> lock{_mutex};
+    if (_size == _max_size - 1) {
+      return false; // 队列满
+    }
+    std::construct_at(_data + _tail, std::forward<Args>(args)...);
+    _tail = (_tail + 1) % _max_size;
+    ++_size;
+    return true;
+  }
+
+  bool pop(T &value) {
+    std::lock_guard<std::mutex> lock{_mutex};
+    if (_size == 0) {
+      return false; // 队列空
+    }
+    value = std::move(*(_data + _head));
+    _head = (_head + 1) % _max_size;
+    --_size;
+    return true;
+  }
+
+private:
+  size_t _max_size;
+  size_t _head{0};
+  size_t _tail{0};
+  size_t _size{0};
+
+  std::allocator<T> _alloc;
+  T *_data;
+  std::mutex _mutex;
+};
+```
+
+我们在构造时分配一块内存用于存储数据，入队时调用 `construct_at` 构造数据，并在析构时调用 `destroy_at` 析构数据并回收空间，在这个例子中，我们采用一个互斥锁来保护这个共享资源的变化，整体实现是很简单的。
+
+## 无锁版本
+
+我们尝试将有锁版本改为无锁版本，核心思路是将互斥锁改为原子，采用原子的 CAS 操作来实现，此处给出书中的一段代码，整理之后大概是这样的：
+
+```cpp
+template <typename T, size_t Capacity> class UnlockQueue {
+public:
+  UnlockQueue() : _max_size(Capacity + 1), _data(_alloc.allocate(_max_size)) {}
+
+  ~UnlockQueue() {
+    size_t currentHead = _head.load(std::memory_order_acquire);
+    size_t currentTail = _tail.load(std::memory_order_acquire);
+
+    while (currentHead != currentTail) {
+      std::destroy_at(_data + currentHead);
+      currentHead = (currentHead + 1) % _max_size;
+    }
+
+    _alloc.deallocate(_data, _max_size);
+  }
+
+  template <typename... Args> bool emplace(Args &&...args) {
+    while (true) {
+      size_t currentTail = _tail.load(std::memory_order_relaxed);
+      size_t nextTail = (currentTail + 1) % _max_size;
+
+      if (nextTail == _head.load(std::memory_order_acquire)) {
+        return false; // 队列满
+      }
+
+      if (_tail.compare_exchange_strong(currentTail, nextTail, std::memory_order_release, std::memory_order_relaxed)) {
+        std::construct_at(_data + currentTail, std::forward<Args>(args)...);
+        return true;
+      }
+    }
+  }
+
+  bool pop(T &value) {
+    while (true) {
+      size_t currentHead = _head.load(std::memory_order_relaxed);
+      size_t nextHead = (currentHead + 1) % _max_size;
+
+      if (currentHead == _tail.load(std::memory_order_acquire)) {
+        return false;
+      }
+
+      if (_head.compare_exchange_strong(currentHead, nextHead, std::memory_order_release, std::memory_order_relaxed)) {
+        value = std::move(*(_data + currentHead));
+        std::destroy_at(_data + currentHead);
+        return true;
+      }
+    }
+  }
+
+private:
+  size_t _max_size;
+  std::atomic<size_t> _head{0};
+  std::atomic<size_t> _tail{0};
+
+  std::allocator<T> _alloc;
+  T *_data;
+};
+```
+
+在这个版本中，我们将 `_head` 和 `_tail` 改为原子变量，并使用 `compare_exchange_strong` 的 CAS 操作来更新它们，确保只有一个线程能成功更新指针。
+
+此处可以考虑一下为啥没有选择简单的内存屏障，而是利用了循环的CAS操作？是因为在高并发场景下，多个线程可能同时通过了队列满或队列空的检查，如果不使用CAS，可能会导致多个线程同时修改 `_head` 或 `_tail`，从而造成数据被重复修改。
+
+### 存在的问题
+
+乍一看这个实现没一点毛病，从单生产者单消费者、到多生产者多消费者都能正常工作，但是实际上是存在一个隐患的：
+
+```cpp
+// 问题代码段
+if (_tail.compare_exchange_strong(currentTail, nextTail, std::memory_order_release, std::memory_order_relaxed)) {
+    std::construct_at(_data + currentTail, std::forward<Args>(args)...);  // 危险！
+    return true;
+}
+```
+
+由于我们是先更新了 `_tail`，再构造数据，这就导致了一个问题，**消费者可能会在数据还未构造完成时就读取到这个位置的数据**，从而导致读取到未初始化的数据。
+
+因此，此种实现**只适用于对象构造极快的场景**，否则就会产生问题，对于更为广泛应用的实现，我们需要考虑更复杂的设计。
+
+## 高性能无锁队列
+
+为了解决上述问题，我们需要设计一个真正支持复杂对象的无锁队列，核心思路是引入 **序列号机制** 来确保数据完整性和可见性。
+
+### 设计原理
+
+- **序列号同步机制**：队列的单个数据修改为槽，每个槽位都有一个原子序列号，用于跟踪数据状态
+- **三状态序列号**：
+  - `seq == pos`：槽位可用于入队
+  - `seq == pos + 1`：槽位有数据，可出队
+  - `seq == pos + Capacity`：槽位已出队，可在下一轮重新入队
+- **先构造后可见**：先完成数据构造，再更新序列号使数据对消费者可见
+
+### 实现代码
+
+```cpp
+template <typename T, size_t Capacity>
+class SuperQueue
 {
 private:
-  class alignas(std::hardware_destructive_interference_size) bucket_type
+  // 确保容量是2的幂，便于位运算优化
+  static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be power of 2");
+  static_assert(std::is_move_constructible_v<T> || std::is_copy_constructible_v<T>,
+                "T must can be move or copy construction");
+  static_assert(std::is_nothrow_move_constructible_v<T> || std::is_nothrow_copy_constructible_v<T>,
+                "the copy or move shouldn't throw error");
+
+  static constexpr size_t _cache_line_size = 64;
+
+  struct alignas(_cache_line_size) Slot
   {
-  private:
-    using bucket_value = std::pair<Key, Value>;
-    using bucket_data = std::vector<bucket_value>;
-    using bucket_iterator = typename bucket_data::iterator;
+    std::atomic<size_t> _sequence{0};
+    alignas(T) std::array<std::byte, sizeof(T)> _storage;
 
-    bucket_iterator find_entry_for(const Key& key)
+    T *data() noexcept
     {
-      return std::find_if(_data.begin(), _data.end(),
-                          [&](const bucket_value& item) -> bool { return item.first == key; });
+      return std::launder(reinterpret_cast<T *>(_storage.data()));
     }
+  };
 
-  public:
-    void add_or_update_node(const Key& key, const Value& value)
+  alignas(_cache_line_size) std::atomic<size_t> _enqueue_pos{0};
+  alignas(_cache_line_size) std::atomic<size_t> _dequeue_pos{0};
+
+  std::array<Slot, Capacity> _buffer;
+
+public:
+  SuperQueue()
+  {
+    // 初始化每个slot的序列号
+    for (size_t i = 0; i < Capacity; ++i)
     {
-      std::unique_lock<std::shared_mutex> lock{_sh_mtx};
-      if (auto found = find_entry_for(key); found != _data.end())
-        found->second = value;
-      else
-        _data.emplace_back(key, value);
+      _buffer[i]._sequence.store(i, std::memory_order_relaxed);
     }
+  }
 
-    void delete_node(const Key& key)
+  ~SuperQueue()
+  {
+    // 析构剩余的元素
+    size_t front = _dequeue_pos.load(std::memory_order_relaxed);
+    size_t back = _enqueue_pos.load(std::memory_order_relaxed);
+
+    while (front != back)
     {
-      std::unique_lock<std::shared_mutex> lock{_sh_mtx};
-      if (auto found = find_entry_for(key); found != _data.end())
+      size_t pos = front & (Capacity - 1);  // 位运算取模
+      if (_buffer[pos]._sequence.load(std::memory_order_acquire) == front + 1)
       {
-        *found = std::move(_data.back());
-        _data.pop_back();
+        std::destroy_at(_buffer[pos].data());
+      }
+      ++front;
+    }
+  }
+
+  template <typename... Args>
+  bool emplace(Args &&...args)
+  {
+    Slot *slot;
+    size_t pos = _enqueue_pos.load(std::memory_order_relaxed);
+
+    while (true)
+    {
+      slot = &_buffer[pos & (Capacity - 1)];
+      size_t seq = slot->_sequence.load(std::memory_order_acquire);
+      intptr_t diff = (intptr_t)seq - (intptr_t)pos;
+
+      if (diff == 0)
+      {
+        // 该位置可以插入，尝试占据这个位置
+        if (_enqueue_pos.compare_exchange_weak(pos, pos + 1, std::memory_order_relaxed))
+        {
+          break;
+        }
+      }
+      else if (diff < 0)
+      {
+        // 队列满
+        return false;
+      }
+      else
+      {
+        // 其他生产者已经占用了这个位置
+        pos = _enqueue_pos.load(std::memory_order_relaxed);
       }
     }
 
-    Value value_for(const Key& key, const Value& default_value)
+    // 在占据的槽中构造元素
+    std::construct_at(slot->data(), std::forward<Args>(args)...);
+
+    // 更新序列号，使数据对消费者可见
+    slot->_sequence.store(pos + 1, std::memory_order_release);
+
+    return true;
+  }
+
+  bool pop(T &result)
+  {
+    Slot *slot;
+    size_t pos = _dequeue_pos.load(std::memory_order_relaxed);
+
+    while (true)
     {
-      std::shared_lock<std::shared_mutex> lock{_sh_mtx};
-      auto found = find_entry_for(key);
-      return (found == _data.end()) ? default_value : found->second;
+      slot = &_buffer[pos & (Capacity - 1)];
+      size_t seq = slot->_sequence.load(std::memory_order_acquire);
+      intptr_t diff = (intptr_t)seq - (intptr_t)(pos + 1);
+
+      if (diff == 0)
+      {
+        // 尝试更新出队位置
+        if (_dequeue_pos.compare_exchange_weak(pos, pos + 1, std::memory_order_relaxed))
+        {
+          break;
+        }
+      }
+      else if (diff < 0)
+      {
+        // 队列空
+        return false;
+      }
+      else
+      {
+        // 其他消费者已经占用了这个位置
+        pos = _dequeue_pos.load(std::memory_order_relaxed);
+      }
     }
 
-  private:
-    bucket_data _data;
-    mutable std::shared_mutex _sh_mtx;
-  };
+    // 读取数据
+    result = std::move(*slot->data());
+    std::destroy_at(slot->data());
 
-public:
-  LockLookupTable(unsigned size = 19, const Hash& hasher = Hash()) : _buckets(size), _hasher(hasher)
-  {
-    for (auto& bucket : _buckets)
-    {
-      bucket = std::make_unique<bucket_type>();
-    }
-  }
+    // 更新序列号，使位置对生产者可用
+    slot->_sequence.store(pos + Capacity, std::memory_order_release);
 
-  LockLookupTable(const LockLookupTable&) = delete;
-  LockLookupTable& operator=(const LockLookupTable&) = delete;
-
-  void add_or_update_table(const Key& key, const Value& value = Value())
-  {
-    get_bucket(key).add_or_update_node(key, value);
-  }
-
-  void delete_table(const Key& key)
-  {
-    get_bucket(key).delete_node(key);
-  }
-
-  Value value_for(const Key& key, const Value& default_value = Value())
-  {
-    return get_bucket(key).value_for(key, default_value);
-  }
-
-private:
-  std::vector<std::unique_ptr<bucket_type>> _buckets;
-  Hash _hasher;
-
-  bucket_type& get_bucket(const Key& key) const
-  {
-    const size_t index = _hasher(key) % _buckets.size();
-    return *_buckets[index];
+    return true;
   }
 };
 ```
 
-这里简单说一下此结构的设计思想：
+### 设计解析
 
-- **分桶策略与细粒度锁**： 散列表内部维护一个 `std::vector<std::unique_ptr<bucket_type>>`，即桶数组，然后外界传入 key 后通过 `std::hash` 算到对应索引，然后拿到对应的桶，这一步是无锁的，对桶的操作由其内部的共享锁进行控制，通过这种设计，不同线程可以并发地访问不同的桶。
+整个设计是非常巧妙的，被称为 **Dmitry Vyukov's MPMC Queue**，可以说是无锁编程的经典之作，下面我们来详细解析一下这个实现：
 
-- **读写锁的应用**： 读操作使用读锁，写操作则用独占锁，这种方案在保证安全的基础上进一步提高性能。
+**可见顺序**
 
-- **缓存行对齐**： 我们对每一个桶进行了内存对齐，从而避免伪共享导致的性能下降。
-
-笔者测试环境为 arch 系统，逻辑核心有16，然后在混合读写场景下最高可到 40M 的操作速度，还是非常可观的。
-
-## 链表
-
-与前面我们已经实现过的几个结构不同，链表的节点在内存中不连续分布，这使得传统的锁策略在性能上更加不理想，特别是单个全局锁。
-
-> 虽然可以使用内存池等策略来解决这个问题，但是为了更为广泛的使用，此处我们暂且不引入内存池。
-
-为了在保证线程安全的前提下提高并发性能，我们需要采用更细粒度的锁策略，一种经典的方法是 **Hand-Over-Hand Locking**，即在遍历链表时，总是持有两个相邻节点的锁，确保在释放前一个节点的锁之前，下一个节点的锁已经被获取。
+确保消费者只能看到完全构造好的数据，以解决之前版本的数据可见性竞争问题。
 
 ```cpp
-template <typename T>
-class LockList
-{
-private:
-  struct alignas(std::hardware_destructive_interference_size) Node
-  {
-    std::shared_mutex _mtx;
-    std::optional<T> _data;
-    std::unique_ptr<Node> _next;
-
-    Node() = default;
-
-    Node(const T& data) : _data(std::make_optional<T>(data))
-    {
-    }
-  };
-
-public:
-  LockList() = default;
-  ~LockList()
-  {
-    remove_if([](auto&) -> bool { return true; });
-  }
-
-  LockList(const LockList&) = delete;
-  LockList& operator=(const LockList&) = delete;
-
-  void push_front(const T& value)
-  {
-    std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
-    std::unique_lock<std::shared_mutex> lock{_head._mtx};
-    new_node->_next = std::move(_head._next);
-    _head._next = std::move(new_node);
-  }
-
-  template <typename Predicate>
-  void remove_if(Predicate p)
-  {
-    Node* current = &_head;
-    std::unique_lock<std::shared_mutex> lock_cur{current->_mtx};
-
-    while (Node* next = current->_next.get())
-    {
-      std::unique_lock<std::shared_mutex> lock_next{next->_mtx};
-      if (p(next->_data.value()))
-      {
-        auto old_next = std::move(current->_next);
-        current->_next = std::move(old_next->_next);
-        lock_next.unlock();
-      }
-      else
-      {
-        lock_cur.unlock();
-        current = next;
-        lock_cur = std::move(lock_next);
-      }
-    }
-  }
-
-  template <typename Predicate>
-  std::optional<T> find_first_of(Predicate p)
-  {
-    Node* current = &_head;
-    std::shared_lock<std::shared_mutex> cur_lock{current->_mtx};
-    while (Node* next = current->_next.get())
-    {
-      std::shared_lock<std::shared_mutex> next_lock{next->_mtx};
-      cur_lock.unlock();
-      if (p(next->_data.value()))
-      {
-        T result = next->_data.value();
-        next_lock.unlock();
-        return result;
-      }
-      current = next;
-      cur_lock = std::move(next_lock);
-    }
-    return std::nullopt;
-  }
-
-  template <typename Function>
-  void for_each(Function func)
-  {
-    Node* current = &_head;
-    std::shared_lock<std::shared_mutex> cur_lock{current->_mtx};
-    while (Node* next = current->_next.get())
-    {
-      std::shared_lock<std::shared_mutex> next_lock{next->_mtx};
-      cur_lock.unlock();
-      func(next->_data.value());
-      current = next;
-      cur_lock = std::move(next_lock);
-    }
-  }
-
-private:
-  Node _head;  // 虚节点
-};
+// 生产者：先构造数据，再更新序列号
+std::construct_at(&slot->data, std::forward<Args>(args)...);
+slot->sequence.store(pos + 1, std::memory_order_release);  // 数据构造完才可见
 ```
 
-同样分析一下这个链表的设计思路：
+**位运算优化**
 
-- **锁耦合**：在遍历链表时，线程会先锁定当前节点，然后尝试锁定下一个节点，只有成功锁定之下一个节点后才会释放当前节点的锁，然后前进一步，这个过程就像手递手交接一样，也是这个 Hand-Over-Hand Locking 名称的由来。
+要求容量必须是2的幂，使用位与运算替代模运算，大幅提升性能。
 
-- **细粒度锁**: 不同于用一个全局锁锁住整个链表，我们给每个节点都加了锁，确保不同部分可以并发处理。
+```cpp
+static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be power of 2");
+slot = &buffer[pos & (Capacity - 1)];  // 替代 pos % Capacity
+```
 
-- **虚头节点**: 经典处理了，可以简化 nullptr 等边界条件。
+**缓存行对齐优化**
 
-缓存行对齐和读写锁的优化和前面是一样的，这里不再重复介绍。
+`enqueue_pos` 和 `dequeue_pos` 分别对齐到独立的缓存行，同时每个槽位也对齐到缓存行，从而减少伪共享。
 
-本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/10-table-list/table.cc)。
+```cpp
+struct alignas(64) Slot {
+    std::atomic<size_t> sequence{0};
+    T data;
+};
+
+alignas(cache_line_size) std::atomic<size_t> enqueue_pos{0};
+alignas(cache_line_size) std::atomic<size_t> dequeue_pos{0};
+```
+
+在上述实现中，其实还涉及两个知识点：**ABA问题和缓存行对齐**，这两个部分我们并没有详细展开讲解，可以自行查阅。
+
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/10-unlock-queue/mpmc_queue.cc)。

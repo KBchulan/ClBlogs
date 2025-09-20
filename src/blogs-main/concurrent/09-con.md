@@ -1,5 +1,5 @@
 ---
-title: 09 有锁栈、队列
+title: 09 有锁散列表、链表
 
 article: true
 order: 9
@@ -11,370 +11,240 @@ category:
 tag:
   - cpp
 
-date: 2025-08-30
+date: 2025-09-16
 
-description: 基于锁操作实现线程安全的栈和队列，以及优化的双端队列
+description: 基于读写锁的并发散列表实现，使用分桶策略优化并发性能，以及基本的并发链表
 footer: Always coding, always learning
 ---
-
 <!-- more -->
 
-# 09 有锁栈、队列
+# 09有锁散列表、链表
 
-本节要实现的目标是: **基于锁操作的栈和队列**，有了前面的基础，本节的内容可以说是非常简单了。
+本节要实现的目标是: **基于读写锁的并发散列表实现，使用分桶策略优化并发性能，以及基本的并发链表**。
 
-## 有锁栈
+## 散列表
 
-基于锁的栈实现是最简单直接的并发数据结构之一，我们只需要在标准库的 `std::stack` 基础上添加一个互斥锁即可实现线程安全。
+散列表（Hash Table）是一种通过哈希函数将键映射到桶中的数据结构，从而实现高效的查找、插入和删除操作，核心在于：
+
+- **哈希函数**：将任意键转换为数组索引的函数，最理想的哈希函数是能做到 **键均匀分布，且没有冲突**。
+- **哈希冲突**：当两个不同的键映射到同一个索引时，即发生冲突，这就是哈希冲突，常见的解决方法是 **链表法、开放寻址法**。
+
+在并发场景下，为了保证散列表的线程安全，必须对访问进行同步，一种简单的方法是使用单个全局锁来保护整个数据结构，但这会使所有操作串行化，严重限制并发性能。
+
+更优的策略是采用 **分桶锁（Lock Striping）**，即为每个桶或一组桶分配独立的锁，这样，不同线程访问不同桶时可以并行执行，显著提高吞吐量。
 
 ```cpp
-template <typename T>
-class LockStack
+template <typename Key, typename Value, typename Hash = std::hash<Key>>
+class LockLookupTable
 {
-public:
-  LockStack() = default;
-  ~LockStack() = default;
-
-  LockStack(const LockStack& other)
-  {
-    std::lock_guard<std::mutex> lock{other._mtx};
-    _stack = other._stack;
-  }
-
-  LockStack& operator=(const LockStack& other)
-  {
-    if (this == &other) return *this;
-    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
-    this->_stack = other._stack;
-    return *this;
-  }
-
-  LockStack(LockStack&& other) noexcept(std::is_nothrow_move_constructible_v<std::stack<T>>)
-  {
-    std::lock_guard<std::mutex> lock{other._mtx};
-    _stack = std::move(other._stack);
-  }
-
-  LockStack& operator=(LockStack&& other) noexcept(std::is_nothrow_move_assignable_v<std::stack<T>>)
-  {
-    if (this == &other) return *this;
-    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
-    this->_stack = std::move(other._stack);
-    return *this;
-  }
-
-  void push(const T& value)
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    _stack.push(value);
-  }
-
-  void push(T&& value)
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    _stack.push(std::move(value));
-  }
-
-  template <typename... Args>
-  void emplace(Args&&... args)
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    _stack.emplace(std::forward<Args>(args)...);
-  }
-
-  bool try_pop(T& value)
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    if (_stack.empty()) return false;
-    value = std::move_if_noexcept(_stack.top());
-    _stack.pop();
-    return true;
-  }
-
-  std::optional<T> pop() noexcept
-  {
-    static_assert(std::is_nothrow_move_constructible_v<T>, "this operation need T contains no throw in move cons");
-    std::lock_guard<std::mutex> lock{_mtx};
-    if (_stack.empty()) return std::nullopt;
-    std::optional<T> result{std::move(_stack.top())};
-    _stack.pop();
-    return result;
-  }
-
-  std::optional<T> top() const
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    if (_stack.empty()) return std::nullopt;
-    return std::optional<T>{_stack.top()};
-  }
-
-  bool empty() const noexcept
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    return _stack.empty();
-  }
-
-  size_t size() const noexcept
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    return _stack.size();
-  }
-
-  void clear() noexcept
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    while (!_stack.empty())
-    {
-      _stack.pop();
-    }
-  }
-
 private:
-  std::stack<T> _stack;
-  mutable std::mutex _mtx;
-};
-```
-
-值得注意的只有 2 点：
-
-- mutex 应该使用 mutable 修饰，因为我们在一些 const 函数中使用到了。
-- 使用 optional 处理空栈异常，而不是传统的 try、catch，当然也可以使用 `std::expected` 来代替这个。
-
-整体的实现是非常简单的，我们给所有操作都上了锁，足以保证操作原子性和异常安全性，但是也正因为如此，性能开销是十分巨大的，会有大量的锁竞争，因此这个有锁栈只能用于并发程度不高的情况，大多就是原型的开发，对于更为高性能的无锁栈，我们在后续章节介绍。
-
-## 有锁队列
-
-那对应有锁队列的实现其实也大同小异，为了有一些区分，我们此处使用条件变量的方式来实现：
-
-```cpp
-template <typename T>
-class LockQueue
-{
-public:
-  LockQueue() = default;
-  ~LockQueue() = default;
-
-  LockQueue(const LockQueue& other)
+  class alignas(std::hardware_destructive_interference_size) bucket_type
   {
-    std::lock_guard<std::mutex> lock{other._mtx};
-    _queue = other._queue;
-  }
+  private:
+    using bucket_value = std::pair<Key, Value>;
+    using bucket_data = std::vector<bucket_value>;
+    using bucket_iterator = typename bucket_data::iterator;
 
-  LockQueue& operator=(const LockQueue& other)
-  {
-    if (this == &other) return *this;
-    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
-    this->_queue = other._queue;
-    if (!this->_queue.empty())
+    bucket_iterator find_entry_for(const Key& key)
     {
-      _cv.notify_all();
-    }
-    return *this;
-  }
-
-  LockQueue(LockQueue&& other) noexcept(std::is_move_constructible_v<std::queue<T>>)
-  {
-    std::lock_guard<std::mutex> lock{other._mtx};
-    _queue = std::move(other._queue);
-  }
-
-  LockQueue& operator=(LockQueue&& other) noexcept(std::is_move_assignable_v<std::queue<T>>)
-  {
-    if (this == &other) return *this;
-    std::scoped_lock<std::mutex, std::mutex> lock{this->_mtx, other._mtx};
-    this->_queue = std::move(other._queue);
-    if (!this->_queue.empty())
-    {
-      _cv.notify_all();
-    }
-    return *this;
-  }
-
-  void push(const T& value)
-  {
-    {
-      std::lock_guard<std::mutex> lock{_mtx};
-      _queue.push(value);
-    }
-    _cv.notify_one();
-  }
-
-  void push(T&& value)
-  {
-    {
-      std::lock_guard<std::mutex> lock{_mtx};
-      _queue.push(std::move(value));
-    }
-    _cv.notify_one();
-  }
-
-  template <typename... Args>
-  void emplace(Args&&... args)
-  {
-    {
-      std::lock_guard<std::mutex> lock{_mtx};
-      _queue.emplace(std::forward<Args>(args)...);
-    }
-    _cv.notify_one();
-  }
-
-  bool try_pop(T& value)
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    if (_queue.empty()) return false;
-    value = std::move_if_noexcept(_queue.front());
-    _queue.pop();
-    return true;
-  }
-
-  std::optional<T> pop() noexcept
-  {
-    static_assert(std::is_nothrow_move_constructible_v<T>, "this operation need T contains no throw in move cons");
-    std::unique_lock<std::mutex> lock{_mtx};
-    _cv.wait(lock, [this]() -> bool { return !_queue.empty(); });
-    std::optional<T> result{std::move(_queue.front())};
-    _queue.pop();
-    return result;
-  }
-
-  bool empty() const noexcept
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    return _queue.empty();
-  }
-
-  size_t size() const noexcept
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    return _queue.size();
-  }
-
-  void clear() noexcept
-  {
-    std::lock_guard<std::mutex> lock{_mtx};
-    while (!_queue.empty())
-    {
-      _queue.pop();
-    }
-  }
-
-private:
-  std::queue<T> _queue;
-  mutable std::mutex _mtx;
-  std::condition_variable _cv;
-};
-```
-
-此时，再来看一下这两个实现，我们会发现，所有的操作都加了锁，好像除了保证操作的原子性没有任何好处，它只能确保所有读写操作串行化执行，但是由于锁的存在，它的效率本质上是比单线程更低的。
-
-## 双锁队列优化
-
-为了提高有锁队列的并发性能，我们可以通过分离头尾操作来实现更细粒度的锁控制。基本思想是：**队列的插入操作只需要对尾部加锁，删除操作只需要对头部加锁，这样就可以实现插入和删除操作的并行执行**。
-
-下面是基于链表的双锁队列实现：
-
-```cpp
-template <typename T>
-class LockQueueInList
-{
-public:
-  LockQueueInList() : _head(new Node), _tail(_head), _size(0)
-  {
-  }
-
-  ~LockQueueInList()
-  {
-    while (Node* const old_head = _head)
-    {
-      _head = _head->_next;
-      delete old_head;
-    }
-  }
-
-  LockQueueInList(const LockQueueInList&) = delete;
-  LockQueueInList& operator=(const LockQueueInList&) = delete;
-
-  void push(T item)
-  {
-    Node* const new_node = new Node();
-
-    {
-      std::lock_guard<std::mutex> lock{_tail_mtx};
-      _tail->_data = std::move(item);
-      _tail->_next = new_node;
-      _tail = _tail->_next;
-      _size.fetch_add(1, std::memory_order_acq_rel);
+      return std::find_if(_data.begin(), _data.end(),
+                          [&](const bucket_value& item) -> bool { return item.first == key; });
     }
 
-    _size.notify_one();
-  }
-
-  std::optional<T> try_pop()
-  {
-    std::lock_guard<std::mutex> lock{_head_mtx};
-    if (empty())
+  public:
+    void add_or_update_node(const Key& key, const Value& value)
     {
-      return std::nullopt;
+      std::unique_lock<std::shared_mutex> lock{_sh_mtx};
+      if (auto found = find_entry_for(key); found != _data.end())
+        found->second = value;
+      else
+        _data.emplace_back(key, value);
     }
-    return pop_head();
-  }
 
-  std::optional<T> pop()
-  {
-    std::unique_lock<std::mutex> lock{_head_mtx};
-    while (true)
+    void delete_node(const Key& key)
     {
-      if (_size.load(std::memory_order_acquire) > 0)
+      std::unique_lock<std::shared_mutex> lock{_sh_mtx};
+      if (auto found = find_entry_for(key); found != _data.end())
       {
-        return pop_head();
+        *found = std::move(_data.back());
+        _data.pop_back();
       }
-      lock.unlock();
-      _size.wait(0, std::memory_order_acquire);
-      lock.lock();
+    }
+
+    Value value_for(const Key& key, const Value& default_value)
+    {
+      std::shared_lock<std::shared_mutex> lock{_sh_mtx};
+      auto found = find_entry_for(key);
+      return (found == _data.end()) ? default_value : found->second;
+    }
+
+  private:
+    bucket_data _data;
+    mutable std::shared_mutex _sh_mtx;
+  };
+
+public:
+  LockLookupTable(unsigned size = 19, const Hash& hasher = Hash()) : _buckets(size), _hasher(hasher)
+  {
+    for (auto& bucket : _buckets)
+    {
+      bucket = std::make_unique<bucket_type>();
     }
   }
 
-  bool empty() const
+  LockLookupTable(const LockLookupTable&) = delete;
+  LockLookupTable& operator=(const LockLookupTable&) = delete;
+
+  void add_or_update_table(const Key& key, const Value& value = Value())
   {
-    return _size.load(std::memory_order_acquire) == 0;
+    get_bucket(key).add_or_update_node(key, value);
+  }
+
+  void delete_table(const Key& key)
+  {
+    get_bucket(key).delete_node(key);
+  }
+
+  Value value_for(const Key& key, const Value& default_value = Value())
+  {
+    return get_bucket(key).value_for(key, default_value);
   }
 
 private:
-  struct Node
-  {
-    std::optional<T> _data;
-    Node* _next;
+  std::vector<std::unique_ptr<bucket_type>> _buckets;
+  Hash _hasher;
 
-    Node() : _next(nullptr)
+  bucket_type& get_bucket(const Key& key) const
+  {
+    const size_t index = _hasher(key) % _buckets.size();
+    return *_buckets[index];
+  }
+};
+```
+
+这里简单说一下此结构的设计思想：
+
+- **分桶策略与细粒度锁**： 散列表内部维护一个 `std::vector<std::unique_ptr<bucket_type>>`，即桶数组，然后外界传入 key 后通过 `std::hash` 算到对应索引，然后拿到对应的桶，这一步是无锁的，对桶的操作由其内部的共享锁进行控制，通过这种设计，不同线程可以并发地访问不同的桶。
+- **读写锁的应用**： 读操作使用读锁，写操作则用独占锁，这种方案在保证安全的基础上进一步提高性能。
+- **缓存行对齐**： 我们对每一个桶进行了内存对齐，从而避免伪共享导致的性能下降。
+
+笔者测试环境为 arch 系统，逻辑核心有16，然后在混合读写场景下最高可到 40M 的操作速度，还是非常可观的。
+
+## 链表
+
+与前面我们已经实现过的几个结构不同，链表的节点在内存中不连续分布，这使得传统的锁策略在性能上更加不理想，特别是单个全局锁。
+
+> 虽然可以使用内存池等策略来解决这个问题，但是为了更为广泛的使用，此处我们暂且不引入内存池。
+
+为了在保证线程安全的前提下提高并发性能，我们需要采用更细粒度的锁策略，一种经典的方法是 **Hand-Over-Hand Locking**，即在遍历链表时，总是持有两个相邻节点的锁，确保在释放前一个节点的锁之前，下一个节点的锁已经被获取。
+
+```cpp
+template <typename T>
+class LockList
+{
+private:
+  struct alignas(std::hardware_destructive_interference_size) Node
+  {
+    std::shared_mutex _mtx;
+    std::optional<T> _data;
+    std::unique_ptr<Node> _next;
+
+    Node() = default;
+
+    Node(const T& data) : _data(std::make_optional<T>(data))
     {
     }
   };
 
-  std::optional<T> pop_head()
+public:
+  LockList() = default;
+  ~LockList()
   {
-    Node* const old_head = _head;
-    _head = old_head->_next;
-    std::optional<T> result = std::move(old_head->_data);
-
-    delete old_head;
-    _size.fetch_sub(1, std::memory_order_acq_rel);
-
-    return result;
+    remove_if([](auto&) -> bool { return true; });
   }
 
-  Node* _head;
-  Node* _tail;
-  std::atomic<size_t> _size;
-  mutable std::mutex _head_mtx;
-  mutable std::mutex _tail_mtx;
+  LockList(const LockList&) = delete;
+  LockList& operator=(const LockList&) = delete;
+
+  void push_front(const T& value)
+  {
+    std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
+    std::unique_lock<std::shared_mutex> lock{_head._mtx};
+    new_node->_next = std::move(_head._next);
+    _head._next = std::move(new_node);
+  }
+
+  template <typename Predicate>
+  void remove_if(Predicate p)
+  {
+    Node* current = &_head;
+    std::unique_lock<std::shared_mutex> lock_cur{current->_mtx};
+
+    while (Node* next = current->_next.get())
+    {
+      std::unique_lock<std::shared_mutex> lock_next{next->_mtx};
+      if (p(next->_data.value()))
+      {
+        auto old_next = std::move(current->_next);
+        current->_next = std::move(old_next->_next);
+        lock_next.unlock();
+      }
+      else
+      {
+        lock_cur.unlock();
+        current = next;
+        lock_cur = std::move(lock_next);
+      }
+    }
+  }
+
+  template <typename Predicate>
+  std::optional<T> find_first_of(Predicate p)
+  {
+    Node* current = &_head;
+    std::shared_lock<std::shared_mutex> cur_lock{current->_mtx};
+    while (Node* next = current->_next.get())
+    {
+      std::shared_lock<std::shared_mutex> next_lock{next->_mtx};
+      cur_lock.unlock();
+      if (p(next->_data.value()))
+      {
+        T result = next->_data.value();
+        next_lock.unlock();
+        return result;
+      }
+      current = next;
+      cur_lock = std::move(next_lock);
+    }
+    return std::nullopt;
+  }
+
+  template <typename Function>
+  void for_each(Function func)
+  {
+    Node* current = &_head;
+    std::shared_lock<std::shared_mutex> cur_lock{current->_mtx};
+    while (Node* next = current->_next.get())
+    {
+      std::shared_lock<std::shared_mutex> next_lock{next->_mtx};
+      cur_lock.unlock();
+      func(next->_data.value());
+      current = next;
+      cur_lock = std::move(next_lock);
+    }
+  }
+
+private:
+  Node _head;  // 虚节点
 };
 ```
 
-这里说一下这个双端队列的设计优势：
+同样分析一下这个链表的设计思路：
 
-- **分离头尾锁**：使用 `_head_mtx` 保护头部操作，`_tail_mtx` 保护尾部操作，实现读写操作的并行化。
-- **原子计数器**：使用原子操作的 notify 系列操作实现高效的阻塞等待，避免使用传统的条件变量。
+- **锁耦合**：在遍历链表时，线程会先锁定当前节点，然后尝试锁定下一个节点，只有成功锁定之下一个节点后才会释放当前节点的锁，然后前进一步，这个过程就像手递手交接一样，也是这个 Hand-Over-Hand Locking 名称的由来。
+- **细粒度锁**: 不同于用一个全局锁锁住整个链表，我们给每个节点都加了锁，确保不同部分可以并发处理。
+- **虚头节点**: 经典处理了，可以简化 nullptr 等边界条件。
 
-相比于单锁队列，本队列在高并发场景下效果更好，但是内存的分配确实是一个问题，可以留作自己动手: **如何为这个双锁队列设计一个节点内存池**？
+缓存行对齐和读写锁的优化和前面是一样的，这里不再重复介绍。
 
-本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/09-stack-queue/queue.cc)。
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/09-table-list/table.cc)。
