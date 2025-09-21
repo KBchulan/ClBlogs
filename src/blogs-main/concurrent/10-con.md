@@ -201,6 +201,50 @@ if (_tail.compare_exchange_strong(currentTail, nextTail, std::memory_order_relea
 ### 实现代码
 
 ```cpp
+#if defined(__cpp_lib_hardware_interference_size)
+constexpr size_t CACHE_LINE_SIZE = std::hardware_destructive_interference_size;
+#else
+constexpr size_t CACHE_LINE_SIZE = 64;
+#endif
+
+class BackOff
+{
+public:
+  void pause()
+  {
+    for (int i = 0; i < _count; i++)
+    {
+      cpu_pause();
+    }
+    if (_count < 1024)
+    {
+      _count *= 2;
+    }
+  }
+
+  void reset()
+  {
+    _count = 1;
+  }
+
+private:
+  static void cpu_pause()
+  {
+// x86 架构
+#if defined(__x86_64__) || defined(__i386__)
+    __builtin_ia32_pause();
+// ARM 架构
+#elif defined(__arm__) || defined(__aarch64__)
+    __asm__ __volatile__("yield");
+// 其他架构
+#else
+    std::this_thread::yield();
+#endif
+  }
+
+  int _count = 1;
+};
+
 template <typename T, size_t Capacity>
 class SuperQueue
 {
@@ -212,9 +256,9 @@ private:
   static_assert(std::is_nothrow_move_constructible_v<T> || std::is_nothrow_copy_constructible_v<T>,
                 "the copy or move shouldn't throw error");
 
-  static constexpr size_t _cache_line_size = 64;
+  static constexpr size_t CACHE_LINE_SIZE = 64;
 
-  struct alignas(_cache_line_size) Slot
+  struct alignas(CACHE_LINE_SIZE) Slot
   {
     std::atomic<size_t> _sequence{0};
     alignas(T) std::array<std::byte, sizeof(T)> _storage;
@@ -225,8 +269,8 @@ private:
     }
   };
 
-  alignas(_cache_line_size) std::atomic<size_t> _enqueue_pos{0};
-  alignas(_cache_line_size) std::atomic<size_t> _dequeue_pos{0};
+  alignas(CACHE_LINE_SIZE) std::atomic<size_t> _enqueue_pos{0};
+  alignas(CACHE_LINE_SIZE) std::atomic<size_t> _dequeue_pos{0};
 
   std::array<Slot, Capacity> _buffer;
 
@@ -262,6 +306,7 @@ public:
   {
     Slot *slot;
     size_t pos = _enqueue_pos.load(std::memory_order_relaxed);
+    BackOff backoff;
 
     while (true)
     {
@@ -276,6 +321,7 @@ public:
         {
           break;
         }
+        backoff.pause();
       }
       else if (diff < 0)
       {
@@ -286,6 +332,7 @@ public:
       {
         // 其他生产者已经占用了这个位置
         pos = _enqueue_pos.load(std::memory_order_relaxed);
+        backoff.pause();
       }
     }
 
@@ -302,6 +349,7 @@ public:
   {
     Slot *slot;
     size_t pos = _dequeue_pos.load(std::memory_order_relaxed);
+    BackOff backoff;
 
     while (true)
     {
@@ -316,6 +364,7 @@ public:
         {
           break;
         }
+        backoff.pause();
       }
       else if (diff < 0)
       {
@@ -326,6 +375,7 @@ public:
       {
         // 其他消费者已经占用了这个位置
         pos = _dequeue_pos.load(std::memory_order_relaxed);
+        backoff.pause();
       }
     }
 
@@ -337,6 +387,20 @@ public:
     slot->_sequence.store(pos + Capacity, std::memory_order_release);
 
     return true;
+  }
+
+  // 获取当前队列大小
+  [[nodiscard]] size_t size() const noexcept
+  {
+    size_t head = _enqueue_pos.load(std::memory_order_relaxed);
+    size_t tail = _dequeue_pos.load(std::memory_order_relaxed);
+    return head - tail;
+  }
+
+  // 检查是否为空
+  [[nodiscard]] bool empty() const noexcept
+  {
+    return size() == 0;
   }
 };
 ```
@@ -355,15 +419,6 @@ std::construct_at(&slot->data, std::forward<Args>(args)...);
 slot->sequence.store(pos + 1, std::memory_order_release);  // 数据构造完才可见
 ```
 
-**位运算优化**
-
-要求容量必须是2的幂，使用位与运算替代模运算，大幅提升性能。
-
-```cpp
-static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be power of 2");
-slot = &buffer[pos & (Capacity - 1)];  // 替代 pos % Capacity
-```
-
 **缓存行对齐优化**
 
 `enqueue_pos` 和 `dequeue_pos` 分别对齐到独立的缓存行，同时每个槽位也对齐到缓存行，从而减少伪共享。
@@ -378,6 +433,12 @@ alignas(cache_line_size) std::atomic<size_t> enqueue_pos{0};
 alignas(cache_line_size) std::atomic<size_t> dequeue_pos{0};
 ```
 
-在上述实现中，其实还涉及两个知识点：**ABA问题和缓存行对齐**，这两个部分我们并没有详细展开讲解，可以自行查阅。
+**ABA问题**
+
+我们的两个索引都是始终递增的，从而避免了在预分配内存的情况下导致的 ABA 问题，且没有使用 tagger ptr 的方案，更节省性能。
+
+**解决忙等**
+
+我们在 CAS 操作不成功时都进行了 `cpu.pause()`，避免了大量的 CPU 空转，有利于整体程序的健壮运行。
 
 本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/concurrent/10-unlock-queue/mpmc_queue.cc)。
