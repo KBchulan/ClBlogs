@@ -15,7 +15,7 @@ bgImageStyle:
 projects:
   - icon: folder-open
     name: HungerYet
-    desc: 高级程序设计课程设计
+    desc: 仿饿了么的点餐应用
     link: https://github.com/KBchulan/HungerYet
 
   - icon: folder-open

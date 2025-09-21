@@ -7,20 +7,8 @@ export default sidebar({
   "/blogs-main/": [
     "",
     {
-      text: "go",
-      prefix: "go/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
       text: "cpp",
       prefix: "cpp/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
-      text: "vue",
-      prefix: "vue3/",
       collapsible: true,
       children: "structure",
     },
@@ -31,8 +19,8 @@ export default sidebar({
       children: "structure",
     },
     {
-      text: "typescript",
-      prefix: "typescript/",
+      text: "golang",
+      prefix: "golang/",
       collapsible: true,
       children: "structure",
     },

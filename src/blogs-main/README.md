@@ -13,9 +13,7 @@ footer: Always coding, always learning
 
 ## 分类目录
 
-- **go** - Go语言学习
 - **cpp** - 现代C++
-- **vue** - Vue框架学习
 - **asio** - Boost的网络库
-- **typescript** - TypeScript语言学习
+- **golang** - Golang语言学习
 - **concurrent** - C++并发编程
