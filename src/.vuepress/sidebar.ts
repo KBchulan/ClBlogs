@@ -41,6 +41,12 @@ export default sidebar({
       collapsible: true,
       children: "structure",
     },
+    {
+      text: "通关Go语言",
+      prefix: "golang-teach/",
+      collapsible: true,
+      children: "structure",
+    }
   ],
 
   // pages-other 目录的独立侧边栏
