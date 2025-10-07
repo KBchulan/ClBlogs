@@ -1,5 +1,5 @@
 ---
-title: 22 网络编程：Go 语言如何通过 RPC 实现跨平台服务？
+title: 23 结束语 你的 Go 语言成长之路
 article: true
 
 order: 24
