@@ -691,7 +691,31 @@ r.POST("/upload-more", UploadManyFile)
 下面我们看一下 gin 框架中如何使用 cookie 操作，主要分为设置、获取、删除 Cookie三个操作:
 
 ```go
+func SetCookie(c *gin.Context) {
+	c.SetCookie("my-cookie", "hello cookie", 3600, "/", "localhost", false, true)
+	c.String(200, "Cookie set successful")
+}
 
+func GetCookie(c *gin.Context) {
+	cookie, err := c.Cookie("my-cookie")
+	if err != nil {
+		c.String(http.StatusBadRequest, "This cookie deleted")
+	}
+	c.String(http.StatusOK, cookie)
+}
+
+func DeleteCookie(c *gin.Context) {
+	c.SetCookie("my-cookie", "", -1, "/", "localhost", false, true)
+	c.String(200, "Cookie delete success")
+}
+
+r.GET("/set-cookie", SetCookie)
+r.GET("/get-cookie", GetCookie)
+r.GET("/delete-cookie", DeleteCookie)
+
+GET http://localhost:5000/set-cookie HTTP/1.1
+GET http://localhost:5000/get-cookie HTTP/1.1
+GET http://localhost:5000/delete-cookie HTTP/1.1
 ```
 
 这里需要详细介绍一下 `SetCookie方法`，它具有如下参数:
