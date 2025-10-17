@@ -46,6 +46,12 @@ export default sidebar({
       prefix: "golang-teach/",
       collapsible: true,
       children: "structure",
+    },
+    {
+      text: "Go 语言项目开发实战",
+      prefix: "golang-program/",
+      collapsible: true,
+      children: "structure",
     }
   ],
 
