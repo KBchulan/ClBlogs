@@ -16,7 +16,7 @@ export default hopeTheme({
   docsDir: "src",
 
   // 强制暗色
-  darkmode: "auto",
+  darkmode: "enable",
 
   // 导航栏
   navbar,
