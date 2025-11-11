@@ -25,8 +25,8 @@ export default hopeTheme({
   navbarLayout: {
     start: ["Brand"],
     center: ["Links"],
-    // end: ["Search", "Repo", "Outlook"]
-    end: ["Repo", "Outlook"],
+    end: ["Repo", "Search"]
+    // end: ["Repo", "Outlook"],
   },
 
   // 侧边栏
@@ -45,7 +45,6 @@ export default hopeTheme({
       QQ: "2262317520",
       Wechat: "18737519552",
       Email: "18737519552@163.com",
-      Gmail: "whx5234@gmail.com",
     },
   },
 
@@ -125,7 +124,15 @@ export default hopeTheme({
     // shikiPlugin配置 - md多语言支持
 
     // 启用搜索
-    // slimsearch: true,
+    slimsearch: true,
+
+    comment: {
+      provider: "Giscus",
+      repo: "KBchulan/ClBlogs",
+      repoId: "R_kgDOOzkZLw",
+      category: "Announcements",
+      categoryId: "DIC_kwDOOzkZL84Cxrgz"
+    },
 
     blog: {
       filter: (page) => {

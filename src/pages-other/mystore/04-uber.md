@@ -12,7 +12,7 @@ tag:
 
 date: 2025-11-01
 
-description: Golang 的编码规范
+description: Golang 的编码规范，主要介绍最佳实践相关内容
 footer: Always coding, always learning
 ---
 

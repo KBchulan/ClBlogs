@@ -12,7 +12,7 @@ tag:
 
 date: 2025-11-05
 
-description: RabbitMQ 在 Golang 中的使用
+description: RabbitMQ 在 Golang 中的使用，包括基本使用以及一些进阶技巧
 footer: Always coding, always learning
 ---
 

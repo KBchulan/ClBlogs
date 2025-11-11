@@ -1,1 +1,518 @@
 // place your custom styles here
+
+// 分类
+// color0 - 深蓝色
+[data-theme="dark"] .vp-tag.color0 {
+  background: rgb(40, 90, 140);
+}
+
+// color1 - 深蓝色
+[data-theme="dark"] .vp-tag.color1 {
+  background: rgb(40, 90, 140);
+}
+
+// color2 - 青蓝色
+[data-theme="dark"] .vp-tag.color2 {
+  background: rgb(35, 100, 130);
+}
+
+// color3 - 青绿色
+[data-theme="dark"] .vp-tag.color3 {
+  background: rgb(30, 110, 100);
+}
+
+// color4 - 薄荷绿
+[data-theme="dark"] .vp-tag.color4 {
+  background: rgb(40, 120, 95);
+}
+
+// color5 - 石板灰蓝
+[data-theme="dark"] .vp-tag.color5 {
+  background: rgb(70, 85, 105);
+}
+
+// color6 - 冷灰色
+[data-theme="dark"] .vp-tag.color6 {
+  background: rgb(75, 85, 95);
+}
+
+// color7 - 蓝灰色
+[data-theme="dark"] .vp-tag.color7 {
+  background: rgb(60, 80, 100);
+}
+
+// color8 - 深青色
+[data-theme="dark"] .vp-tag.color8 {
+  background: rgb(45, 95, 115);
+}
+
+// 标签
+// color1 - 深蓝色
+[data-theme="dark"] .vp-category.color1 {
+  background: rgb(40, 90, 140);
+  color: rgb(180, 210, 240);
+}
+
+[data-theme="dark"] .vp-category.color1:hover {
+  background: rgb(50, 100, 150);
+}
+
+.vp-category.color1 .vp-category-count {
+  background: #6b9ac4;
+}
+
+// color2 - 青蓝色
+[data-theme="dark"] .vp-category.color2 {
+  background: rgb(35, 100, 130);
+  color: rgb(175, 220, 235);
+}
+
+[data-theme="dark"] .vp-category.color2:hover {
+  background: rgb(45, 110, 140);
+}
+
+.vp-category.color2 .vp-category-count {
+  background: #5da4c4;
+}
+
+// color3 - 青绿色
+[data-theme="dark"] .vp-category.color3 {
+  background: rgb(30, 110, 100);
+  color: rgb(180, 230, 220);
+}
+
+[data-theme="dark"] .vp-category.color3:hover {
+  background: rgb(40, 120, 110);
+}
+
+.vp-category.color3 .vp-category-count {
+  background: #5db5a8;
+}
+
+// color4 - 薄荷绿
+[data-theme="dark"] .vp-category.color4 {
+  background: rgb(40, 120, 95);
+  color: rgb(190, 235, 215);
+}
+
+[data-theme="dark"] .vp-category.color4:hover {
+  background: rgb(50, 130, 105);
+}
+
+.vp-category.color4 .vp-category-count {
+  background: #68b89a;
+}
+
+// color5 - 石板灰蓝
+[data-theme="dark"] .vp-category.color5 {
+  background: rgb(70, 85, 105);
+  color: rgb(200, 210, 225);
+}
+
+[data-theme="dark"] .vp-category.color5:hover {
+  background: rgb(80, 95, 115);
+}
+
+.vp-category.color5 .vp-category-count {
+  background: #8695ab;
+}
+
+// color6 - 冷灰色
+[data-theme="dark"] .vp-category.color6 {
+  background: rgb(75, 85, 95);
+  color: rgb(205, 215, 225);
+}
+
+[data-theme="dark"] .vp-category.color6:hover {
+  background: rgb(85, 95, 105);
+}
+
+.vp-category.color6 .vp-category-count {
+  background: #95a3b0;
+}
+
+// color7 - 蓝灰色
+[data-theme="dark"] .vp-category.color7 {
+  background: rgb(60, 80, 100);
+  color: rgb(195, 210, 230);
+}
+
+[data-theme="dark"] .vp-category.color7:hover {
+  background: rgb(70, 90, 110);
+}
+
+.vp-category.color7 .vp-category-count {
+  background: #7a95b0;
+}
+
+// color8 - 深青色
+[data-theme="dark"] .vp-category.color8 {
+  background: rgb(45, 95, 115);
+  color: rgb(185, 220, 235);
+}
+
+[data-theme="dark"] .vp-category.color8:hover {
+  background: rgb(55, 105, 125);
+}
+
+.vp-category.color8 .vp-category-count {
+  background: #6ba0b8;
+}
+
+
+// 正文后面后缀 - 标签
+// color1 - 深蓝色
+[data-theme="dark"] .page-category-item.color1.clickable:hover {
+  background: rgb(50, 100, 150);
+}
+
+.page-category-item.color1.clickable:hover {
+  background: rgb(200, 220, 245);
+}
+
+[data-theme="dark"] .page-category-item.color1 {
+  background: rgb(30, 70, 110);
+  color: rgb(180, 210, 240);
+}
+
+// color2 - 青蓝色
+[data-theme="dark"] .page-category-item.color2.clickable:hover {
+  background: rgb(45, 110, 140);
+}
+
+.page-category-item.color2.clickable:hover {
+  background: rgb(195, 230, 245);
+}
+
+[data-theme="dark"] .page-category-item.color2 {
+  background: rgb(25, 80, 105);
+  color: rgb(175, 220, 235);
+}
+
+// color3 - 青绿色
+[data-theme="dark"] .page-category-item.color3.clickable:hover {
+  background: rgb(40, 120, 110);
+}
+
+.page-category-item.color3.clickable:hover {
+  background: rgb(200, 240, 235);
+}
+
+[data-theme="dark"] .page-category-item.color3 {
+  background: rgb(20, 85, 80);
+  color: rgb(180, 230, 220);
+}
+
+// color4 - 薄荷绿
+[data-theme="dark"] .page-category-item.color4.clickable:hover {
+  background: rgb(50, 130, 105);
+}
+
+.page-category-item.color4.clickable:hover {
+  background: rgb(210, 245, 230);
+}
+
+[data-theme="dark"] .page-category-item.color4 {
+  background: rgb(30, 95, 75);
+  color: rgb(190, 235, 215);
+}
+
+// color5 - 石板灰蓝
+[data-theme="dark"] .page-category-item.color5.clickable:hover {
+  background: rgb(80, 95, 115);
+}
+
+.page-category-item.color5.clickable:hover {
+  background: rgb(220, 225, 235);
+}
+
+[data-theme="dark"] .page-category-item.color5 {
+  background: rgb(55, 65, 85);
+  color: rgb(200, 210, 225);
+}
+
+// color6 - 冷灰色
+[data-theme="dark"] .page-category-item.color6.clickable:hover {
+  background: rgb(85, 95, 105);
+}
+
+.page-category-item.color6.clickable:hover {
+  background: rgb(225, 230, 235);
+}
+
+[data-theme="dark"] .page-category-item.color6 {
+  background: rgb(60, 70, 80);
+  color: rgb(205, 215, 225);
+}
+
+// color7 - 蓝灰色
+[data-theme="dark"] .page-category-item.color7.clickable:hover {
+  background: rgb(70, 90, 110);
+}
+
+.page-category-item.color7.clickable:hover {
+  background: rgb(215, 225, 240);
+}
+
+[data-theme="dark"] .page-category-item.color7 {
+  background: rgb(45, 65, 80);
+  color: rgb(195, 210, 230);
+}
+
+// color8 - 深青色
+[data-theme="dark"] .page-category-item.color8.clickable:hover {
+  background: rgb(55, 105, 125);
+}
+
+.page-category-item.color8.clickable:hover {
+  background: rgb(205, 230, 245);
+}
+
+[data-theme="dark"] .page-category-item.color8 {
+  background: rgb(35, 75, 95);
+  color: rgb(185, 220, 235);
+}
+
+// 正文后面后缀 - 标签 (带左侧切角)
+// color0 - 深蓝色
+[data-theme="dark"] .page-tag-item.color0.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(50, 100, 150) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(50, 100, 150) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color0.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(200, 220, 245) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(200, 220, 245) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color0 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(40, 90, 140) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(40, 90, 140) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(180, 210, 240);
+}
+
+.page-tag-item.color0 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(230, 240, 250) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(230, 240, 250) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(40, 90, 140);
+}
+
+// color1 - 深蓝色
+[data-theme="dark"] .page-tag-item.color1.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(50, 100, 150) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(50, 100, 150) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color1.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(200, 220, 245) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(200, 220, 245) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color1 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(40, 90, 140) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(40, 90, 140) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(180, 210, 240);
+}
+
+.page-tag-item.color1 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(230, 240, 250) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(230, 240, 250) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(40, 90, 140);
+}
+
+// color2 - 青蓝色
+[data-theme="dark"] .page-tag-item.color2.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(45, 110, 140) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(45, 110, 140) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color2.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(195, 230, 245) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(195, 230, 245) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color2 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(35, 100, 130) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(35, 100, 130) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(175, 220, 235);
+}
+
+.page-tag-item.color2 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(225, 240, 248) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(225, 240, 248) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(35, 100, 130);
+}
+
+// color3 - 青绿色
+[data-theme="dark"] .page-tag-item.color3.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(40, 120, 110) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(40, 120, 110) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color3.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(200, 240, 235) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(200, 240, 235) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color3 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(30, 110, 100) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(30, 110, 100) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(180, 230, 220);
+}
+
+.page-tag-item.color3 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(230, 245, 243) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(230, 245, 243) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(30, 110, 100);
+}
+
+// color4 - 薄荷绿
+[data-theme="dark"] .page-tag-item.color4.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(50, 130, 105) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(50, 130, 105) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color4.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(210, 245, 230) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(210, 245, 230) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color4 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(40, 120, 95) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(40, 120, 95) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(190, 235, 215);
+}
+
+.page-tag-item.color4 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(235, 248, 243) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(235, 248, 243) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(40, 120, 95);
+}
+
+// color5 - 石板灰蓝
+[data-theme="dark"] .page-tag-item.color5.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(80, 95, 115) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(80, 95, 115) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color5.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(220, 225, 235) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(220, 225, 235) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color5 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(70, 85, 105) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(70, 85, 105) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(200, 210, 225);
+}
+
+.page-tag-item.color5 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(235, 238, 243) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(235, 238, 243) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(70, 85, 105);
+}
+
+// color6 - 冷灰色
+[data-theme="dark"] .page-tag-item.color6.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(85, 95, 105) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(85, 95, 105) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color6.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(225, 230, 235) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(225, 230, 235) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color6 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(75, 85, 95) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(75, 85, 95) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(205, 215, 225);
+}
+
+.page-tag-item.color6 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(238, 240, 243) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(238, 240, 243) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(75, 85, 95);
+}
+
+// color7 - 蓝灰色
+[data-theme="dark"] .page-tag-item.color7.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(70, 90, 110) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(70, 90, 110) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color7.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(215, 225, 240) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(215, 225, 240) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color7 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(60, 80, 100) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(60, 80, 100) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(195, 210, 230);
+}
+
+.page-tag-item.color7 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(232, 237, 245) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(232, 237, 245) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(60, 80, 100);
+}
+
+// color8 - 深青色
+[data-theme="dark"] .page-tag-item.color8.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(55, 105, 125) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(55, 105, 125) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.page-tag-item.color8.clickable:hover {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(205, 230, 245) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(205, 230, 245) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .page-tag-item.color8 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(45, 95, 115) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(45, 95, 115) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(185, 220, 235);
+}
+
+.page-tag-item.color8 {
+  background: linear-gradient(135deg, transparent 0.75em, rgb(228, 240, 248) 0) top left, linear-gradient(45deg, transparent 0.75em, rgb(228, 240, 248) 0) bottom left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  color: rgb(45, 95, 115);
+}
