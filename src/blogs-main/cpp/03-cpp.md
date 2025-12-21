@@ -1686,33 +1686,6 @@ X<A>::f();  // 偏特化 T::type
 X<B>::f();  // 主模板
 ```
 
-### SFINAE vs 概念对比
-
-同样的需求，用 SFINAE 和概念的写法对比：
-
-```cpp
-// SFINAE 写法
-template<typename T, typename = std::void_t<decltype(std::declval<T>() + std::declval<T>())>>
-auto add_sfinae(const T& a, const T& b) {
-    return a + b;
-}
-
-// 概念写法
-template<typename T>
-concept Addable = requires(T a) { a + a; };
-
-template<Addable T>
-auto add_concept(const T& a, const T& b) {
-    return a + b;
-}
-```
-
-概念的优势：
-- **语法更直观**：直接表达意图，不需要理解 SFINAE 的技巧
-- **错误信息更清晰**：编译器会明确告诉你哪个约束不满足
-- **可复用**：定义一次概念，到处使用
-- **可组合**：用 `&&` 和 `||` 轻松组合约束
-
 ### 总结
 
 | 语法 | 用途 |
