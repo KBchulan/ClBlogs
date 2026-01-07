@@ -1,5 +1,5 @@
 ---
-title: 04 特性概览
+title: 04 核心指导方针
 article: true
 order: 4
 star: false
@@ -10,12 +10,12 @@ category:
 tag:
   - cpp
 
-date: 2025-11-11
+date: 2025-11-09
 
-description: cpp 11 ~ 23 的常见特性复习
+description: C++ 核心指导方针，包括哲学思想与许多最佳实践
 footer: Always coding, always learning
 ---
 
-# 04 特性概览
+# C++ 核心指导方针
 
-TODO: cpp11 ~ cpp23 的常见特性复习
+本节内容相当之长，请直接跳转至 [官英](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#gsl-guidelines-support-library) 或 [官中](https://github.com/lynnboy/CppCoreGuidelines-zh-CN/blob/master/CppCoreGuidelines-zh-CN.md) 进行阅读。
