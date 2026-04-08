@@ -31,11 +31,17 @@ export default sidebar({
       children: "structure",
     },
     {
-      text: "concurrent",
-      prefix: "concurrent/",
+      text: "杂货铺",
+      prefix: "mystore/",
       collapsible: true,
       children: "structure",
     },
+    {
+      text: "并发编程",
+      prefix: "concurrent/",
+      collapsible: true,
+      children: "structure",
+    }
   ],
 
   // program-main 目录的独立侧边栏
@@ -67,18 +73,6 @@ export default sidebar({
     {
       text: "一周一次",
       prefix: "week-once/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
-      text: "杂货铺",
-      prefix: "mystore/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
-      text: "bug排查",
-      prefix: "bug-fix/",
       collapsible: true,
       children: "structure",
     },
