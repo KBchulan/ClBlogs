@@ -18,6 +18,8 @@ footer: Always coding, always learning
 
 # cpp14
 
+## C++14 语言特性
+
 ### 二进制字面量
 
 二进制字面量提供了一种方便的方式来表示二进制数。可以用 `'` 分隔数字。
@@ -54,7 +56,7 @@ auto b = generator(); // == 1
 auto c = generator(); // == 2
 ```
 
-因为现在可以将值移动（或完美转发）到lambda中，而以前只能按值或引用捕获，我们现在可以通过值在lambda中捕获移动语义类型。注意在下面的例子中，`task2` 捕获列表中 `=` 左边的 `p` 是一个lambda体内私有的新变量，不是指原始的 `p`。
+因此现在可以将值移动（或完美转发）到lambda中，而以前只能按值或引用捕获，我们现在可以通过值在lambda中捕获移动语义类型。注意在下面的例子中，`task2` 捕获列表中 `=` 左边的 `p` 是一个lambda体内私有的新变量，不是指原始的 `p`。
 
 ```c++
 auto p = std::make_unique<int>(1);
@@ -134,8 +136,6 @@ static_assert(std::is_same<const int&, decltype(f(x))>::value == 0);
 static_assert(std::is_same<int, decltype(f(x))>::value == 1);
 static_assert(std::is_same<const int&, decltype(g(x))>::value == 1);
 ```
-
-参见：[`decltype (C++11)`](README.md#decltype)。
 
 ### 放松constexpr函数的约束
 
@@ -225,8 +225,6 @@ foo(std::unique_ptr<T>{new T{}}, function_that_throws(), std::unique_ptr<T>{new 
 ```c++
 foo(std::make_unique<T>(), function_that_throws(), std::make_unique<T>());
 ```
-
-查看 [智能指针 (C++11)](README.md#智能指针) 部分了解关于 `std::unique_ptr` 和 `std::shared_ptr` 的更多信息。
 
 ## 致谢
 

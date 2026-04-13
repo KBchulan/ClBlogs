@@ -1,7 +1,7 @@
 ---
-title: 08 cpp23
+title: 09 cpp23
 article: true
-order: 8
+order: 9
 star: false
 
 category:
@@ -17,6 +17,8 @@ footer: Always coding, always learning
 ---
 
 # cpp23
+
+## C++23 语言特性
 
 ### consteval if
 
@@ -90,6 +92,20 @@ v[3, 2, 1] = 42;
 
 ## C++23 库特性
 
+### std::print / std::println
+
+C++23 引入的格式化输出函数，基于 `std::format` 的 `{}` 语法，直接输出到 stdout（或指定流），无需 `\n` 拼接。
+
+```c++
+#include <print>
+
+std::print("hello {}\n", "world");       // 不换行
+std::println("value = {}", 42);          // 自动换行
+std::println(stderr, "error: {}", msg);  // 输出到指定流
+```
+
+与 `printf` 不同，类型安全；与 `std::cout` 不同，性能更好且语法简洁。
+
 ### 栈跟踪库
 
 栈跟踪是调用序列的近似表示，由栈跟踪条目组成。栈跟踪条目（由 `std::stacktrace_entry` 表示）由包括源文件和行号以及描述字段的信息组成。
@@ -106,6 +122,8 @@ int main() {
 ```
 
 ```
+❯ g++ main.cc -std=c++23 -lstdc++exp
+❯ ./a.out
   0#  main at /app/example.cpp:5 [0x5ee42e3db747]
   1#  <unknown> [0x76e76dc29d8f]
   2#  __libc_start_main [0x76e76dc29e3f]
@@ -123,7 +141,7 @@ std::string{"foobarbaz"}.contains("bat"); // == false
 
 ### std::to_underlying
 
-支持将枚举转换为其基础类型的常见实用程序：
+支持将枚举转换为其基础类型的常见实用程序，具体说来是我们写在 `enum class :` 中 `:` 后面的类型：
 
 ```c++
 enum class MyEnum : int { A = 1, B, C };
@@ -185,14 +203,13 @@ int err = c_api_recreate_handle(std::inout_ptr(resource), resource_deleter{});
 
 Inout/out指针都支持到 `void**` 的转换（隐式），以及显式到用户指定类型的转换。
 
-### std::optional的幺半群操作
+### std::optional的半群操作
 
 支持 `std::optional` 的各种 `and_then`、`transform` 和 `or_else` 操作。
 
 ```c++
 std::optional<int> parse_int(const std::string&);
 std::optional<int> ensure_non_negative(int);
-std::optional<double> default_value_or_empty(double);
 
 std::optional<double> stringToSqrtDouble(const std::string& input) {
   return parse_int(input)
@@ -200,7 +217,7 @@ std::optional<double> stringToSqrtDouble(const std::string& input) {
     .transform([](int x) {
       return std::sqrt(x);
     })
-    .or_else(default_value_or_empty);
+    .or_else([]() -> std::optional<double> { return std::nullopt; });
 }
 ```
 

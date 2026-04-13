@@ -18,25 +18,11 @@ footer: Always coding, always learning
 
 # cpp17
 
-### 类模板的模板参数推导
-
-自动模板参数推导就像为函数完成的一样，现在包括类构造函数。
-
-```c++
-template <typename T = float>
-struct MyContainer {
-  T val;
-  MyContainer() : val{} {}
-  MyContainer(T val) : val{val} {}
-  // ...
-};
-MyContainer c1 {1}; // OK MyContainer<int>
-MyContainer c2; // OK MyContainer<float>
-```
+## C++17 语言特性
 
 ### 用auto声明非类型模板参数
 
-遵循 `auto` 的推导规则，同时尊重非类型模板参数列表的允许类型[\*]，模板参数可以从其参数的类型推导：
+遵循 `auto` 的推导规则，同时尊重非类型模板参数列表的允许类型，模板参数可以从其参数的类型推导：
 
 ```c++
 template <auto... seq>
@@ -50,7 +36,10 @@ auto seq = std::integer_sequence<int, 0, 1, 2>();
 auto seq2 = my_integer_sequence<0, 1, 2>();
 ```
 
-\* - 例如，你不能使用 `double` 作为模板参数类型，这也使用 `auto` 推导也无效。
+但并非所有类型都可以用 `auto` 作为非类型模板参数：
+
+- 允许： 整数（int, long, char）、布尔值（bool）、枚举（enum）、指针。
+- 禁止： 浮点数（double, float）、类对象（直到 C++20 才放宽限制）。
 
 ### 折叠表达式
 
@@ -92,7 +81,7 @@ auto x4 {3.0}; // x4 是 double
 
 ### constexpr lambda
 
-使用 `constexpr` 的编译期lambda。
+使用 `constexpr` 的编译期lambda，和 constexpr 修饰函数一样，允许修饰的函数在编译期求值，但并非必须在编译期求值。
 
 ```c++
 auto identity = [](int n) constexpr { return n; };
@@ -141,7 +130,7 @@ valueRef(); // 321
 
 ### 内联变量
 
-内联说明符可以应用于变量以及函数。声明为内联的变量具有与声明为内联的函数相同的语义。
+内联说明符可以应用于变量以及函数。声明为内联的变量具有与声明为内联的函数相同的语义，允许在多个翻译单元中定义变量，而不会违反 ODR（One Definition Rule）。内联变量的一个常见用例是定义常量。
 
 ```c++
 // 使用编译器浏览器的反汇编示例。
@@ -189,7 +178,7 @@ namespace A::B::C {
 
 ### 结构化绑定
 
-一个去结构化初始化的提案，允许编写 `auto [ x, y, z ] = expr;`，其中 `expr` 的类型是一个元组样对象，其元素将绑定到变量 `x`、`y` 和 `z`（这个构造声明）。*元组样对象*包括 [`std::tuple`](README.md#元组)、`std::pair`、[`std::array`](README.md#stdarray) 和聚合结构。
+一个去结构化初始化的提案，允许编写 `auto [ x, y, z ] = expr;`，其中 `expr` 的类型是一个元组样对象，其元素将绑定到变量 `x`、`y` 和 `z`（这个构造声明）。*元组样对象*包括 `std::tuple`、`std::pair`、`std::array` 和聚合结构。
 
 ```c++
 using Coordinate = std::pair<int, int>;
@@ -217,7 +206,7 @@ for (const auto& [key, value] : mapping) {
 
 ### 带初始化器的选择语句
 
-`if` 和 `switch` 语句的新版本，简化常见代码模式并帮助用户保持作用域紧凑。
+`if` 和 `switch` 语句的新版本，简化常见代码模式并帮助用户保持作用域紧凑，允许在条件之前声明和初始化变量，且作用域仅限于条件和随后的控制体。
 
 ```c++
 {
@@ -245,7 +234,7 @@ switch (Foo gadget(args); auto s = gadget.status()) {
 
 ### constexpr if
 
-根据编译期条件编写实例化的代码。
+根据编译期条件编写实例化的代码，会在编译期求值条件，并且只实例化满足条件的分支，而另一个分支将被丢弃，不会实例化，注意，条件必须是编译期常量表达式，因为此特性必须在编译期完成剪枝。
 
 ```c++
 template <typename T>
@@ -265,7 +254,9 @@ static_assert(isIntegral<S>() == false);
 
 ### UTF-8 字符字面量
 
-以 `u8` 开头的字符字面量是类型为 `char` 的字符字面量。UTF-8 字符字面量的值等于其 ISO 10646 代码点值。
+以 `u8` 开头的字符字面量是类型为 `char` 的字符字面量。UTF-8 字符字面量的值等于其 ISO 10646 代码点值，注意，在 cpp17 中，此特性仍只适用于 ascii 字符在一个字节的情况，因为它仍属于 `char` 类型，cpp20 扩展了此特性，允许 utf-8 字符字面量的值超过一个字节，并且类型为 `char8_t`。
+
+因此，在 cpp17 中，该字面量的作用仅仅是具有 Unicode 语义的 ASCII 字符字面量：
 
 ```c++
 char x = u8'x';
@@ -273,7 +264,9 @@ char x = u8'x';
 
 ### 枚举的直接列表初始化
 
-枚举现在可以使用大括号语法初始化。
+在 C++17 之前，如果我们想给 int 起个独立的新名字，可以选择 `enum class`，但是它的缺点是不能直接初始化枚举值，必须使用 `static_cast`，这很麻烦，我们必须手动调用 `static_cast` 来将整数转换为枚举类型。
+
+cpp17 允许直接使用大括号初始化枚举值，编译器会检查值是否在枚举的范围内，如果不在范围内会报错：
 
 ```c++
 enum byte : unsigned char {};
@@ -380,7 +373,7 @@ void my_callback(std::string msg, [[maybe_unused]] bool error) {
 
 ### 类模板参数推导
 
-*类模板参数推导* (CTAD) 允许编译器从构造函数参数推导模板参数。
+*类模板参数推导* (CTAD) 允许编译器从构造函数参数推导模板参数，而不需要显式指定模板参数。对于类模板的构造函数，编译器将使用构造函数参数来推导模板参数。
 
 ```c++
 std::vector v{ 1, 2, 3 }; // 推导为 std::vector<int>
@@ -391,7 +384,7 @@ auto lck = std::lock_guard{ mtx }; // 推导为 std::lock_guard<std::mutex>
 auto p = new std::pair{ 1.0, 2.0 }; // 推导为 std::pair<double, double>*
 ```
 
-对于用户定义的类型，*推导指南*可以用来指导编译器如何推导模板参数（如果适用）：
+对于用户定义的类型，*推导指引*可以用来指导编译器如何推导模板参数（如果适用）：
 
 ```c++
 template <typename T>
@@ -402,7 +395,7 @@ struct container {
   container(Iter beg, Iter end);
 };
 
-// 推导指南
+// 推导指引
 template <typename Iter>
 container(Iter b, Iter e) -> container<typename std::iterator_traits<Iter>::value_type>;
 
@@ -424,9 +417,15 @@ container c{ 5, 6 }; // 错误：std::iterator_traits<int>::value_type 不是类
 std::variant<int, double> v{ 12 };
 std::get<int>(v); // == 12
 std::get<0>(v); // == 12
+
 v = 12.0;
 std::get<double>(v); // == 12.0
 std::get<1>(v); // == 12.0
+
+std::visit([](auto&& arg)
+{
+  std::cout << arg; // 输出 12.0
+}, v);
 ```
 
 ### std::optional
@@ -510,7 +509,7 @@ p(1, 2); // == 3
 
 ### std::apply
 
-使用参数元组调用 `Callable` 对象。
+把一个元组（`std::tuple`、`std::pair` 或 `std::array`）拆解开，然后把里面的元素作为参数传给一个函数。
 
 ```c++
 auto add = [](int x, int y) {
@@ -549,19 +548,19 @@ std::byte c = a & b;
 int j = std::to_integer<int>(c); // 0
 ```
 
-请注意，`std::byte` 只是一个枚举，枚举的大括号初始化成为可能要感谢[枚举的直接列表初始化](#枚举的直接列表初始化)。
+请注意，`std::byte` 只是一个枚举，枚举的大括号初始化依赖于 [枚举的直接列表初始化](#枚举的直接列表初始化)。
 
 ### 映射和集合的拼接
 
-无需昂贵的副本、移动或堆分配/释放开销，移动节点和合并容器。
+无需昂贵的副本、移动或堆分配/释放开销，移动节点和合并容器，主要依赖于 `extract` 和 `merge` 成员函数。
 
 从一个映射移动元素到另一个：
 
 ```c++
 std::map<int, string> src {{1, "one"}, {2, "two"}, {3, "buckle my shoe"}};
 std::map<int, string> dst {{3, "three"}};
-dst.insert(src.extract(src.find(1))); // 便宜的从 `src` 移除和插入 { 1, "one" } 到 `dst`。
-dst.insert(src.extract(2)); // 便宜的从 `src` 移除和插入 { 2, "two" } 到 `dst`。
+dst.insert(src.extract(src.find(1))); // 无损耗的从 `src` 移除和插入 { 1, "one" } 到 `dst`。
+dst.insert(src.extract(2)); // 无损耗的的从 `src` 移除和插入 { 2, "two" } 到 `dst`。
 // dst == { { 1, "one" }, { 2, "two" }, { 3, "three" } };
 ```
 
@@ -616,15 +615,14 @@ auto result2 = std::sort(std::execution::seq, std::begin(longVector), std::end(l
 const std::string ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 std::string guid;
 // 从 ALLOWED_CHARS 采样 5 个字符。
-std::sample(ALLOWED_CHARS.begin(), ALLOWED_CHARS.end(), std::back_inserter(guid),
-  5, std::mt19937{ std::random_device{}() });
+std::sample(ALLOWED_CHARS.begin(), ALLOWED_CHARS.end(), std::back_inserter(guid), 5, std::mt19937{ std::random_device{}() });
 
 std::cout << guid; // 例如 G1fW2
 ```
 
 ### std::clamp
 
-在下界和上界之间钳制给定值。
+限制一个值在 `[min, max]` 区间内。如果超过最大值就等于最大值，如果小于最小值就等于最小值，语法为 `std::clamp(value, min, max)`，其中 `value` 是要限制的值，`min` 是最小值，`max` 是最大值。
 
 ```c++
 std::clamp(42, -1, 1); // == 1
@@ -651,6 +649,7 @@ std::reduce(std::cbegin(a), std::cend(a), 1, std::multiplies<>{}); // == 6
 另外，你可以为reducer指定转换：
 
 ```c++
+const auto times_ten = [](const auto n) { return n * 10; };
 std::transform_reduce(std::cbegin(a), std::cend(a), 0, std::plus<>{}, times_ten); // == 60
 
 const std::array<int, 3> b{ 1, 2, 3 };
@@ -694,7 +693,7 @@ std::lcm(p, q); // == 9
 
 ### std::not_fn
 
-返回给定函数结果否定的实用函数。
+返回给定函数结果否定的实用函数，给定一个谓词，`std::not_fn` 返回一个新的谓词，当调用时，它将调用原始谓词并返回其结果的否定。
 
 ```c++
 const std::ostream_iterator<int> ostream_it{ std::cout, " " };

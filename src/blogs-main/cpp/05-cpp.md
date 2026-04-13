@@ -737,11 +737,11 @@ void g() noexcept {
 
 ### char32_t 和 char16_t
 
-提供标准类型用于表示 UTF-8 字符串。
+提供标准类型用于表示 UTF-32 和 UTF-16 编码单元。
 
 ```c++
-char32_t utf8_str[] = U"\u0123";
-char16_t utf8_str[] = u"\u0123";
+char32_t utf32_str[] = U"\u0123";  // UTF-32
+char16_t utf16_str[] = u"\u0123";  // UTF-16
 ```
 
 ### 原始字符串字面量

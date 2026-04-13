@@ -18,6 +18,8 @@ footer: Always coding, always learning
 
 # cpp20
 
+## C++20 语言特性
+
 ### 协程
 
 > **注意：** 虽然这些示例说明了如何在基本级别使用协程，但编译代码时还有很多其他情况。这些示例不是C++20协程的完整覆盖。由于标准库还没有提供 `generator` 和 `task` 类，我使用cppcoro库来编译这些示例。
@@ -76,7 +78,7 @@ co_await meaning_of_life; // == 42
 
 *概念*是约束类型的命名编译期谓词。它们采用以下形式：
 
-```
+```cpp
 template < template-parameter-list >
 concept concept-name = constraint-expression;
 ```
@@ -256,7 +258,7 @@ struct foo {
   char c;
 
   // 比较 `a` 首先，然后 `b`，然后 `c` ...
-  friend auto operator<=>(const foo&) const = default;
+  auto operator<=>(const foo&) const = default;
 };
 
 foo f1{0, false, 'a'}, f2{0, true, 'b'};
@@ -273,7 +275,7 @@ struct foo {
   bool b;
   char c;
 
-  friend std::strong_ordering operator<=>(const foo& other) const {
+  std::strong_ordering operator<=>(const foo& other) const {
       return x <=> other.x;
   }
 };
@@ -392,7 +394,7 @@ get_foo<foo{123}>();
 
 ### constexpr虚函数
 
-虚函数现在可以是 `constexpr` 并在编译期评估。`constexpr` 虚函数可以重写非 `constexpr` 虚函数，反之亦然。
+虚函数现在可以是 `constexpr` 并在编译期评估。`constexpr` 虚函数可以重写非 `constexpr` 虚函数，反之亦然，这与传统行为下虚函数运行时评估导致 `constexpr` 无法修饰虚函数的情况不同。
 
 ```c++
 struct X1 {
@@ -433,7 +435,7 @@ foo c {"123"}; // OK
 
 ### 立即函数
 
-类似于 `constexpr` 函数，但具有 `consteval` 说明符的函数必须产生常数。这些被称为*立即函数*。
+类似于 `constexpr` 函数，但具有 `consteval` 说明符的函数必须产生常数。这些被称为*立即函数*，即 `consteval` 函数，并且必须在编译期调用，否则就会导致编译错误。
 
 ```c++
 consteval int sqr(int n) {
@@ -515,7 +517,7 @@ char8_t utf8_str[] = u8"\u0123";
 
 ### constinit
 
-`constinit` 说明符要求变量必须在编译期初始化。
+`constinit` 说明符要求变量必须在编译期初始化，但它并不具有 `const` 语义，仅要求变量具有静态存储期限并且在编译期初始化。这对于需要在编译期初始化但在运行时修改的变量很有用。
 
 ```c++
 const char* g() { return "dynamic initialization"; }
@@ -549,13 +551,15 @@ std::format("{} {}", 123); // 错误 -- 参数不足
 std::format("{} {}", "Here's a number:", 123); // OK
 ```
 
-基于在运行时创建的格式化器格式化字符串：
+基于在运行时创建的格式化器格式化字符串，`std::make_format_args` 要求接收的是左值引用的参数包：
 
 ```cpp
 std::string fmt = "{} {}";
 fmt += "{}{}";
-std::vformat(fmt, std::make_format_args("Here's a number:", 1, 2, 3));
-// OK -- 返回 "Here's a number: 123"
+std::string s = "Here's a number:";
+int a = 1, b = 2, c = 3;
+auto res = std::vformat(fmt, std::make_format_args(s, a, b, c));
+std::cout << res << '\n'; // 输出 "Here's a number: 1 2 3"
 ```
 
 格式化失败时（例如无效的格式字符串），`std::vformat` 会抛出 `std::format_error`。
@@ -598,7 +602,6 @@ std::format("{}", f); // == "1/2"
 
 **比较概念：**
 
-- `boolean` - 指定一个类型可以用于布尔上下文。
 - `equality_comparable` - 指定 `operator==` 是等价关系。
 
 **对象概念：**
@@ -692,7 +695,7 @@ std::numbers::e; // 2.71828...
 
 ### std::is_constant_evaluated
 
-谓词函数，在编译期上下文中调用时为真。
+谓词函数，在编译期上下文中调用时为真，可以用于编写在编译期和运行时具有不同行为的函数。
 
 ```c++
 constexpr bool is_compile_time() {
@@ -711,7 +714,7 @@ auto p = std::make_shared<int[]>(5); // 指向 `int[5]` 的指针
 auto p = std::make_shared<int[5]>(); // 指向 `int[5]` 的指针
 ```
 
-### 字符串的starts_with和ends_with
+### 字符串的 starts_with 和 ends_with
 
 字符串（和字符串视图）现在有 `starts_with` 和 `ends_with` 成员函数来检查字符串是否以给定字符串开始或结束。
 
@@ -736,7 +739,7 @@ set.contains(2); // true
 
 ### std::bit_cast
 
-重新解释一个对象从一种类型到另一种更安全的方式。
+重新解释一个对象从一种类型到另一种更安全的方式，而不需要使用 `reinterpret_cast`。要求源类型和目标类型的 `sizeof` 必须相等，且两者都是 trivially copyable，否则编译失败。
 
 ```c++
 float f = 123.0;
@@ -819,7 +822,7 @@ std::is_lt(cmp_ac); // == true
 
 执行线程（如 `std::thread`），在销毁时连接并可被发信号停止。
 
-与需要检查线程是否可加入然后连接的 `std::thread` 不同，`std::jthread` 将通过其析构函数自动尝试连接。
+与需要检查线程是否可加入然后连接的 `std::thread` 不同，`std::jthread` 将通过其析构函数自动尝试 `join`。
 
 与 `std::thread` 不同，你可以通过调用 `std::jthread::request_stop` 或通过线程的 `stop_source` 要求它停止：
 
