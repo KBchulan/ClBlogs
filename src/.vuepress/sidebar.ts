@@ -19,12 +19,6 @@ export default sidebar({
       children: "structure",
     },
     {
-      text: "aiops",
-      prefix: "aiops/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
       text: "golang",
       prefix: "golang/",
       collapsible: true,

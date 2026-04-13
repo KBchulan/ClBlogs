@@ -14,7 +14,6 @@ footer: Always coding, always learning
 
 - **cpp** - 现代C++
 - **asio** - Boost的网络库
-- **aiops** - AIOps相关的技术文章
 - **golang** - Golang语言学习
 - **杂货铺** - 杂七杂八的技术文章
 - **并发编程** - C++并发编程
