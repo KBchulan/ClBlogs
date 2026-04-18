@@ -2,7 +2,7 @@
 title: 第 320 话
 article: true
 
-order: 1
+order: 320
 star: false
 
 category:

@@ -12,16 +12,5 @@ bgImageStyle:
   opacity: 0.25
   background-attachment: fixed
 
-# projects:
-#   - icon: folder-open
-#     name: HungerYet
-#     desc: 仿饿了么的点餐应用
-#     link: https://github.com/KBchulan/HungerYet
-
-#   - icon: folder-open
-#     name: LightNovel
-#     desc: 轻小说阅读App
-#     link: https://github.com/KBchulan/lightNovel
-
 footer: Always coding, always learning
 ---

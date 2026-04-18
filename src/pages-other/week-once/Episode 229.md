@@ -2,7 +2,7 @@
 title: 第 229 话
 article: true
 
-order: 1
+order: 229
 star: false
 
 category:

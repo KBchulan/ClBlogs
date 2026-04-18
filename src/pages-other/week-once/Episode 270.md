@@ -2,7 +2,7 @@
 title: 第 270 话
 article: true
 
-order: 1
+order: 270
 star: false
 
 category:
@@ -163,7 +163,6 @@ footer: 现在是发电时间
  她没有做任何拨开的动作，也没有解开扣子的迹象。她只是像催促一样看着我。
 
  这种时候，理性是一个障碍。
-
 
  我无法像以前那样去做。
 
