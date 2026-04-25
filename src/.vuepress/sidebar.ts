@@ -70,5 +70,11 @@ export default sidebar({
       collapsible: true,
       children: "structure",
     },
+    {
+      text: "字节跳动",
+      prefix: "byte-internship/",
+      collapsible: true,
+      children: "structure",
+    }
   ],
 });
