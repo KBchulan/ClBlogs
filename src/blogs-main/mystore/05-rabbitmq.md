@@ -1030,7 +1030,7 @@ go run producer.go "Task 6."
 
 ### RPC
 
-说实话，用 RabbitMQ 来实现 RPC 纯纯闲的，不管是性能还是任何一方面都被 gRPC 爆了，因此不做讲解，有兴趣可以读一下 [RPC例子](https://github.com/KBchulan/ClBlogs-Src/tree/main/pages-other/mystore/04-rabbitmq/09-rpc/server/server.go)。
+说实话，用 RabbitMQ 来实现 RPC 纯纯闲的，不管是性能还是任何一方面都被 gRPC 爆了，因此不做讲解，有兴趣可以读一下 [RPC例子](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/mystore/04-rabbitmq/09-rpc/server/server.go)。
 
 ### TTL
 
@@ -1402,4 +1402,4 @@ func (c *RabbitMQClient) Close() error {
 
 这里留一个小问题，如何确保关闭时能消费完剩余的消息呢?
 
-本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/tree/main/pages-other/mystore/05-rabbitmq)。
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/tree/main/blogs-main/mystore/05-rabbitmq)。

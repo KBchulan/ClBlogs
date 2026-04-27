@@ -736,4 +736,4 @@ GET http://localhost:5000/delete-cookie HTTP/1.1
 
 到这里，Cookie 就介绍完了，更多的都是实际场景了，比如会话管理、个性化等操作了。
 
-本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/pages-other/mystore/03-gin/main.go)。
+本节代码详见[此处](https://github.com/KBchulan/ClBlogs-Src/blob/main/blogs-main/mystore/03-gin/main.go)。
