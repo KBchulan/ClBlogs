@@ -1,5 +1,5 @@
 ---
-title: 4.29 ~ 4.30 - BootCamp
+title: 4.29~4.30 - BootCamp
 article: true
 
 order: 6
@@ -16,7 +16,7 @@ date: 2026-05-01
 footer: Always coding, always learning
 ---
 
-# 4.29 ~ 4.30 - BootCamp
+# 4.29~4.30 - BootCamp
 
 现在是 5.1 早上 10.36，补一下前两天的经历，这两天做的事情很重复，就不单独说了。
 
