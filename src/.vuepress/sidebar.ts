@@ -19,12 +19,6 @@ export default sidebar({
       children: "structure",
     },
     {
-      text: "golang",
-      prefix: "golang/",
-      collapsible: true,
-      children: "structure",
-    },
-    {
       text: "杂货铺",
       prefix: "mystore/",
       collapsible: true,
