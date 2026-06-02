@@ -52,6 +52,12 @@ export default sidebar({
       prefix: "golang-program/",
       collapsible: true,
       children: "structure",
+    },
+    {
+      text: "恋爱必修课",
+      prefix: "love-course/",
+      collapsible: true,
+      children: "structure",
     }
   ],
 
